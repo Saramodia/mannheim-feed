@@ -20,6 +20,13 @@ export function ArticleItem({ a, showReasons }: { a: Ranked; showReasons: boolea
             onError={(e) => (e.currentTarget.style.display = 'none')} />
         )}
       </a>
+      {a.easy_german && (
+        // Va fuera del enlace para que abrirlo no abra la noticia.
+        <details className="easy">
+          <summary>Einfaches Deutsch</summary>
+          <p lang="de">{a.easy_german}</p>
+        </details>
+      )}
     </li>
   )
 }

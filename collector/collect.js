@@ -4,7 +4,9 @@
 //   2. Limpia cada noticia (título, resumen, fecha, imagen).
 //   3. Detecta de qué temas y barrios habla (buscando palabras clave).
 //   4. Elimina duplicados (la misma noticia en dos fuentes).
-//   5. Guarda el resultado: en Supabase (la base de datos online) si hay claves,
+//   5. Si hay clave de Anthropic: la IA añade alemán sencillo y afina temas y barrios
+//      (solo en noticias nuevas o que aún no lo tienen, con un tope por ejecución).
+//   6. Guarda el resultado: en Supabase (la base de datos online) si hay claves,
 //      o en un archivo local de prueba si no las hay.
 
 import Parser from 'rss-parser';
@@ -12,6 +14,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { createClient } from '@supabase/supabase-js';
 import { SOURCES } from './sources.js';
+import { enrichArticles } from './ai.js';
 
 const taxonomy = JSON.parse(readFileSync(new URL('../web/src/taxonomy.json', import.meta.url), 'utf8'));
 const KEEP_DAYS = 21; // borramos noticias de más de 3 semanas
@@ -108,6 +111,23 @@ const articles = dedupe(all)
 
 console.log(`📰 ${all.length} noticias leídas → ${articles.length} tras quitar duplicados`);
 
+// ---------- 5: IA (opcional) ----------
+const AI_KEY = (process.env.ANTHROPIC_API_KEY || '').trim();
+const AI_MAX = Number(process.env.AI_MAX_PER_RUN) || 60; // tope de noticias por ejecución: limita el gasto
+if (!AI_KEY) console.log('ℹ️  Sin ANTHROPIC_API_KEY: se guardan las noticias sin alemán sencillo.');
+
+// Mezcla lo que dice la IA con la noticia. Los temas fijos de cada fuente (p. ej. Polizei → seguridad) se mantienen.
+function applyAi(a, r) {
+  const src = SOURCES.find((s) => s.id === a.source_id);
+  return {
+    ...a,
+    easy_german: r.easy_german,
+    topics: [...new Set([...(src?.topics || []), ...r.topics])],
+    stadtteile: r.stadtteile,
+    is_mannheim: src?.regional ? r.is_mannheim : true
+  };
+}
+
 // Limpiamos la dirección por si se copió con una barra final o con "/rest/v1" al final.
 const cleanUrl = (u = '') => u.trim().replace(/\/+$/, '').replace(/\/rest\/v1$/, '').replace(/\/+$/, '');
 const SUPABASE_URL = cleanUrl(process.env.SUPABASE_URL);
@@ -116,16 +136,49 @@ if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
   if (!/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(SUPABASE_URL)) {
     console.warn('⚠️  SUPABASE_URL no tiene la forma https://xxxx.supabase.co — revisa el secret en GitHub.');
   }
-  // ---------- 5a: guardar en la base de datos online ----------
+  // ---------- 6a: guardar en la base de datos online ----------
   const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false } });
-  const { error } = await db.from('articles').upsert(articles, { onConflict: 'id', ignoreDuplicates: true });
-  if (error) { console.error('❌ Error guardando:', error.message); process.exit(1); }
-  await db.from('articles').delete().lt('published_at', new Date(cutoff).toISOString());
-  console.log('✅ Guardado en Supabase');
+  const cutoffIso = new Date(cutoff).toISOString();
+
+  // Qué noticias ya están guardadas (así solo pagamos la IA por las nuevas).
+  const { data: existing, error: readError } = await db.from('articles').select('id').gte('published_at', cutoffIso).limit(5000);
+  if (readError) { console.error('❌ Error leyendo la base de datos:', readError.message); process.exit(1); }
+  const known = new Set(existing.map((r) => r.id));
+  const fresh = articles.filter((a) => !known.has(a.id));
+
+  // Noticias ya guardadas que todavía no tienen alemán sencillo (por ejemplo, las de antes de activar la IA).
+  let backlog = [];
+  if (AI_KEY) {
+    const { data } = await db.from('articles').select('*').is('easy_german', null)
+      .gte('published_at', cutoffIso).order('published_at', { ascending: false }).limit(AI_MAX);
+    backlog = data || [];
+  }
+
+  const queue = AI_KEY ? [...fresh, ...backlog].slice(0, AI_MAX) : [];
+  const enriched = queue.length ? await enrichArticles(queue, taxonomy, AI_KEY) : new Map();
+
+  const freshRows = fresh.map((a) => (enriched.has(a.id) ? applyAi(a, enriched.get(a.id)) : a));
+  const backlogRows = backlog.filter((a) => enriched.has(a.id)).map((a) => applyAi(a, enriched.get(a.id)));
+
+  if (freshRows.length) {
+    const { error } = await db.from('articles').upsert(freshRows, { onConflict: 'id', ignoreDuplicates: true });
+    if (error) { console.error('❌ Error guardando:', error.message); process.exit(1); }
+  }
+  if (backlogRows.length) {
+    const { error } = await db.from('articles').upsert(backlogRows, { onConflict: 'id' });
+    if (error) { console.error('❌ Error actualizando:', error.message); process.exit(1); }
+  }
+  await db.from('articles').delete().lt('published_at', cutoffIso);
+  console.log(`✅ Guardado en Supabase: ${freshRows.length} nuevas, ${backlogRows.length} actualizadas con IA`);
 } else {
-  // ---------- 5b: modo prueba, sin base de datos ----------
+  // ---------- 6b: modo prueba, sin base de datos ----------
+  let rows = articles;
+  if (AI_KEY) {
+    const enriched = await enrichArticles(articles.slice(0, AI_MAX), taxonomy, AI_KEY);
+    rows = articles.map((a) => (enriched.has(a.id) ? applyAi(a, enriched.get(a.id)) : a));
+  }
   const out = new URL('../web/public/demo-articles.json', import.meta.url);
-  writeFileSync(out, JSON.stringify(articles, null, 1));
+  writeFileSync(out, JSON.stringify(rows, null, 1));
   console.log('💾 Sin claves de Supabase: guardado en web/public/demo-articles.json (modo prueba)');
 }
 
