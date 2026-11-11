@@ -33,44 +33,68 @@ Cada noticia suma puntos: +3 por cada tema que sigues, +4 por cada barrio, +5 po
 
 ---
 
-## Publicarla en internet (una sola vez, unos 30 minutos)
+## Dónde está todo
 
-### Paso 1. Crear la cuenta de GitHub
-GitHub es donde vive el código y donde se ejecuta el recolector.
-1. Entra en github.com y pulsa **Sign up**. Usa tu email personal (es un proyecto tuyo, no de la empresa).
-2. Crea un repositorio nuevo llamado `mannheim-feed`. Puede ser **Private**. No marques ninguna casilla de "Initialize".
-3. En claude.ai, ve a **Settings → Connectors** y conecta GitHub. Así Claude podrá subir el código por ti.
+| Qué | Dónde |
+|---|---|
+| La app | https://saramodia.github.io/mannheim-feed/ |
+| El código | https://github.com/Saramodia/mannheim-feed |
+| La base de datos | Proyecto `mannheim-feed` en supabase.com (región Frankfurt) |
 
-### Paso 2. Crear la base de datos en Supabase
-1. Entra en supabase.com, pulsa **Start your project** e inicia sesión con tu cuenta de GitHub.
-2. **New project**: nombre `mannheim-feed`, región **Frankfurt (eu-central-1)**, plan **Free**. Guarda la contraseña que te pide en un lugar seguro.
-3. Cuando esté listo, abre **SQL Editor**, pega todo el contenido de `supabase/schema.sql` y pulsa **Run**. Esto crea las tablas y las reglas de seguridad.
-4. Ve a **Project Settings → API** y apunta tres valores: *Project URL*, la clave *anon public* y la clave *service_role* (esta última es secreta: no la compartas nunca).
+Para entrar en la app: tu email y tu contraseña. El mismo usuario sirve en el móvil y en la laptop.
+
+---
+
+## Cómo se publicó (una sola vez)
+
+Estos pasos ya están hechos. Quedan aquí para entender cómo está montada la app, o por si algún día hay que repetirlo.
+
+### Paso 1. Cuenta y repositorio de GitHub
+GitHub guarda el código, ejecuta el recolector y publica la app.
+1. Crear la cuenta en github.com con el email personal (es un proyecto personal, no de la empresa).
+2. Crear el repositorio `mannheim-feed` y hacerlo **público**. El plan gratuito de GitHub solo publica webs (GitHub Pages) desde repositorios públicos. No hay riesgo: las claves no están en el código, sino en los Secrets (paso 3).
+3. Conectar GitHub en claude.ai (**Settings → Connectors**) e instalar la app de Claude en GitHub con acceso solo a `mannheim-feed` (https://github.com/settings/installations → Claude → Configure → *Repository access*). Sin este segundo permiso, Claude puede leer el repositorio pero no subir código.
+
+### Paso 2. Base de datos en Supabase
+1. Entrar en supabase.com con la cuenta de GitHub.
+2. **New project**: nombre `mannheim-feed`, región **Frankfurt** (la más cercana a Mannheim, y los datos se quedan en la UE), plan **Free**. Guardar la contraseña de administración en un lugar seguro.
+3. **SQL Editor** → pegar todo `supabase/schema.sql` → **Run**. Crea las tablas `articles` y `profiles` y las reglas de seguridad. Supabase avisa de que la consulta es "destructiva" porque contiene `drop policy if exists`: es normal, solo rehace las reglas de seguridad y no borra datos.
+4. Apuntar tres valores:
+   - **Project URL**: en **Project Settings → Data API**, o en el botón **Connect**. Tiene la forma `https://xxxx.supabase.co`.
+   - **Publishable key** (empieza por `sb_publishable_`): en **Project Settings → API Keys**. Es la clave que usa la app para leer. Puede ser visible.
+   - **Secret key** (empieza por `sb_secret_`): en el mismo sitio. La usa el recolector para escribir noticias. Es secreta: no la compartas nunca.
+
+   Antes Supabase llamaba a estas dos claves *anon* y *service_role*. Las antiguas siguen en la pestaña *Legacy* y también funcionan.
 
 ### Paso 3. Darle las claves a GitHub
-En tu repositorio: **Settings → Secrets and variables → Actions → New repository secret**. Crea tres:
+En el repositorio: **Settings → Secrets and variables → Actions → New repository secret**. Se crean tres:
 
-| Nombre | Valor |
+| Nombre en GitHub | Valor |
 |---|---|
 | `SUPABASE_URL` | la Project URL |
-| `SUPABASE_ANON_KEY` | la clave anon public |
-| `SUPABASE_SERVICE_ROLE_KEY` | la clave service_role |
+| `SUPABASE_ANON_KEY` | la publishable key |
+| `SUPABASE_SERVICE_ROLE_KEY` | la secret key |
 
-Los "secrets" son una caja fuerte: GitHub los usa al ejecutar el recolector, pero nadie puede verlos.
+Los nombres en GitHub se quedan así aunque Supabase haya cambiado los suyos, porque son los que usa el código. Los Secrets son una caja fuerte: GitHub los usa al ejecutar las acciones, pero nadie puede verlos, ni siquiera Claude.
 
 ### Paso 4. Activar la publicación
-1. En el repositorio: **Settings → Pages → Source: GitHub Actions**.
-2. Pestaña **Actions** → "Recoger noticias" → **Run workflow** (para llenar la base de datos por primera vez).
-3. Tu app quedará en `https://TU-USUARIO.github.io/mannheim-feed/`.
+1. **Settings → Pages → Source: GitHub Actions**.
+2. Pestaña **Actions** → **Recoger noticias** → **Run workflow**. Llena la base de datos por primera vez. Después se repite solo cada 30 minutos.
+3. Pestaña **Actions** → **Publicar la app** → **Run workflow**. Construye la app con las claves y la publica. Después se repite sola cada vez que cambia el código.
 
-### Paso 5. Ajustar el inicio de sesión
-En Supabase: **Authentication → URL Configuration**. En *Site URL* y *Redirect URLs* pon la dirección del paso 4. Así el enlace del email te devuelve a tu app.
+GitHub encuentra estas dos acciones porque están descritas en la carpeta `.github/workflows/` del repositorio.
 
-Opcional: cuando ya hayas entrado una vez, en **Authentication → Sign In / Providers** desactiva *Allow new users to sign up* para que nadie más pueda crearse una cuenta.
+### Paso 5. Crear tu usuario
+La app usa **email y contraseña**. Primero se probó entrar con un enlace por email, pero no funcionaba en la app instalada en el móvil: el enlace abría el navegador, que guarda la sesión aparte. Tampoco se pudo enviar un código por email, porque el plan gratuito de Supabase no deja cambiar el texto de los emails.
+
+1. En Supabase: **Authentication → Users → Add user → Create new user**. Escribir el email y la contraseña, y dejar marcado **Auto Confirm User**. Así no hace falta ningún email de confirmación. El servicio de email gratuito de Supabase solo envía unos pocos emails por hora, y al pasarse sale el error "email rate limit exceeded".
+2. **Authentication → Sign In / Providers** → desactivar **Allow new users to sign up**. Así nadie más puede crearse una cuenta en tu app.
 
 ### Paso 6. Instalarla en el móvil
-- **iPhone (Safari):** abre la dirección → botón compartir → *Añadir a pantalla de inicio*.
-- **Android (Chrome):** abre la dirección → menú ⋮ → *Instalar aplicación*.
+- **iPhone (Safari):** abre la dirección de la app → botón compartir → *Añadir a pantalla de inicio*.
+- **Android (Chrome):** abre la dirección de la app → menú ⋮ → *Instalar aplicación*.
+
+Cuando la app cambia, el móvil carga la versión nueva sola. Si no la ves, cierra la app del todo y vuelve a abrirla.
 
 ---
 
