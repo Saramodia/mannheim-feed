@@ -106,7 +106,29 @@ cd ../web && npm install && npm run dev           # abre http://localhost:5173
 ```
 Sin el archivo `web/.env`, la app funciona en **modo prueba**: noticias del archivo local y perfil guardado solo en ese navegador.
 
-## Próximos pasos (fase 2)
-- **Alemán sencillo:** la IA reescribe cada noticia en *einfaches Deutsch* (la columna `easy_german` ya está preparada).
-- **Filtro con IA:** que Claude puntúe cada noticia según tu perfil, más allá de las palabras clave.
-Ambas necesitan una clave de la API de Anthropic, con un coste de pocos céntimos al mes.
+## Fase 2: alemán sencillo y etiquetado con IA
+
+Cuando hay una clave de la API de Anthropic, el recolector pide a Claude (modelo Haiku 5.5, el más barato) dos cosas por cada noticia nueva:
+- Una versión corta en **alemán sencillo** (Einfache Sprache). En la app aparece como un botón **Einfaches Deutsch** debajo de cada noticia, que la despliega.
+- El **tema**, el **barrio** y si la noticia habla de **Mannheim**, con más criterio que las palabras clave. Así "Para ti" acierta más.
+
+Límites que conviene saber:
+- La versión sencilla se basa en el título y el resumen que publica cada medio, no en el artículo completo. En las noticias que llegan por Google News solo hay título.
+- La IA puede equivocarse. Por eso la app siempre muestra también el original y su enlace.
+- Cada ejecución procesa como máximo 60 noticias (`AI_MAX_PER_RUN`). Las noticias que ya estaban guardadas antes de activar la IA se procesan poco a poco, unas cuantas horas.
+- Sin clave, o si falla la IA, el recolector funciona igual que antes, solo sin alemán sencillo.
+
+### Paso 7. Activar la IA
+1. Crear una cuenta en platform.claude.com (es distinta de la de claude.ai) y añadir crédito en **Billing**.
+2. En **Settings → Limits**, poner un límite de gasto mensual (por ejemplo, 5 dólares).
+3. En **API keys**, crear una clave llamada `mannheim-feed`. Copiarla sin pegarla en ningún chat ni documento.
+4. En GitHub: **Settings → Secrets and variables → Actions → New repository secret**. Nombre: `ANTHROPIC_API_KEY`. Valor: la clave.
+5. En **Actions → Recoger noticias → Run workflow**. En el registro de la ejecución aparece una línea `🤖 IA` con las noticias procesadas, los tokens usados y el coste aproximado.
+
+La clave solo la usa el recolector, dentro de GitHub. La app no la ve nunca.
+
+Coste estimado: con unas 150 noticias nuevas al día, menos de 1 dólar al mes con Haiku 5.5 (0,10 $ por millón de tokens de entrada y 0,50 $ por millón de salida, según la [página de precios](https://platform.claude.com/docs/en/about-claude/pricing)). Es una estimación, no una medición: lo real se ve en el registro de cada ejecución y en la pestaña **Usage** de platform.claude.com.
+
+### Ideas para más adelante
+- Puntuar cada noticia según tu perfil completo, en lugar de solo etiquetarla.
+- Un resumen diario con lo más relevante para ti.
