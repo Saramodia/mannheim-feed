@@ -108,8 +108,14 @@ const articles = dedupe(all)
 
 console.log(`📰 ${all.length} noticias leídas → ${articles.length} tras quitar duplicados`);
 
-const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env;
+// Limpiamos la dirección por si se copió con una barra final o con "/rest/v1" al final.
+const cleanUrl = (u = '') => u.trim().replace(/\/+$/, '').replace(/\/rest\/v1$/, '').replace(/\/+$/, '');
+const SUPABASE_URL = cleanUrl(process.env.SUPABASE_URL);
+const SUPABASE_SERVICE_ROLE_KEY = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
 if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
+  if (!/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(SUPABASE_URL)) {
+    console.warn('⚠️  SUPABASE_URL no tiene la forma https://xxxx.supabase.co — revisa el secret en GitHub.');
+  }
   // ---------- 5a: guardar en la base de datos online ----------
   const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false } });
   const { error } = await db.from('articles').upsert(articles, { onConflict: 'id', ignoreDuplicates: true });
