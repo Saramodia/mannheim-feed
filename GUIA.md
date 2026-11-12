@@ -27,6 +27,12 @@ Polizei, …          en GitHub         noticias + perfil
 
 SWR no permite lectores automáticos en su RSS, así que sus noticias llegan a través de Google News. Para añadir una fuente nueva, edita `collector/sources.js`.
 
+### Cómo se recortan los resúmenes y cómo se ve la fuente original
+
+Cada noticia muestra un resumen de como máximo unos 300 caracteres que **termina siempre en una frase completa** (`collector/teaser.js`). El recolector no corta en mitad de una frase, respeta abreviaturas como "Dr." o fechas como "5. November", y quita los "[…]" y "Weiterlesen" que añaden algunos medios. Si una noticia ya estaba guardada, su resumen se ajusta solo en la siguiente ejecución.
+
+Bajo cada noticia aparece **Leer en** y la web de origen (por ejemplo mannheimer-morgen.de). Pulsar la noticia abre el artículo original. En las que llegan por Google News aparece "Google News" porque el enlace pasa por allí; el periódico real se ve arriba, junto a la hora.
+
 ### Cómo decide qué es "Para ti"
 
 Cada noticia suma puntos: +3 por cada tema que sigues, +4 por cada barrio, +5 por cada palabra clave tuya. Luego pesa más lo reciente. Las palabras bloqueadas y las fuentes desactivadas no aparecen nunca. La regla está en `web/src/lib/rank.ts`, y los temas con sus palabras clave en `web/src/taxonomy.json`.

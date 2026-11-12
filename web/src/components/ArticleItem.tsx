@@ -1,5 +1,15 @@
 import { timeAgo, type Ranked } from '../lib/rank'
 
+// Dirección de la fuente original, sin "www.". Las noticias de Google News pasan por su propio enlace.
+function sourceHost(link: string) {
+  try {
+    const host = new URL(link).hostname.replace(/^www\./, '')
+    return host === 'news.google.com' ? 'Google News' : host
+  } catch {
+    return ''
+  }
+}
+
 export function ArticleItem({ a, showReasons }: { a: Ranked; showReasons: boolean }) {
   return (
     <li className="article">
@@ -11,6 +21,9 @@ export function ArticleItem({ a, showReasons }: { a: Ranked; showReasons: boolea
           </p>
           <h2 className="article-title">{a.title}</h2>
           {a.summary && <p className="article-summary">{a.summary}</p>}
+          <p className="article-origin">
+            Leer en <strong>{sourceHost(a.link) || a.source_label}</strong> ↗
+          </p>
           {showReasons && a.reasons.length > 0 && (
             <p className="article-reasons">Porque sigues {a.reasons.join(', ')}</p>
           )}

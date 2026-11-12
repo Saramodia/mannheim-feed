@@ -1,7 +1,7 @@
 // EL RECOLECTOR
 // Qué hace, paso a paso:
 //   1. Lee cada fuente de sources.js.
-//   2. Limpia cada noticia (título, resumen, fecha, imagen).
+//   2. Limpia cada noticia (título, resumen en frases completas, fecha, imagen).
 //   3. Detecta de qué temas y barrios habla (buscando palabras clave).
 //   4. Elimina duplicados (la misma noticia en dos fuentes).
 //   5. Si hay clave de Anthropic: la IA añade alemán sencillo y afina temas y barrios
@@ -15,6 +15,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { createClient } from '@supabase/supabase-js';
 import { SOURCES } from './sources.js';
 import { enrichArticles } from './ai.js';
+import { teaser } from './teaser.js';
 
 const taxonomy = JSON.parse(readFileSync(new URL('../web/src/taxonomy.json', import.meta.url), 'utf8'));
 const KEEP_DAYS = 21; // borramos noticias de más de 3 semanas
@@ -30,7 +31,6 @@ const decode = (s = '') =>
   s.replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'")
    .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&#(\d+);/g, (_, n) => String.fromCharCode(n));
 const stripHtml = (s = '') => decode(s.replace(/<[^>]*>/g, ' ')).replace(/\s+/g, ' ').trim();
-const truncate = (s, n) => (s.length > n ? s.slice(0, n).replace(/\s+\S*$/, '') + '…' : s);
 const hash = (s) => createHash('sha1').update(s).digest('hex').slice(0, 16);
 const norm = (s) => s.toLowerCase().normalize('NFKD').replace(/[^a-zäöüß0-9 ]/g, '').replace(/\s+/g, ' ').trim();
 
@@ -68,7 +68,7 @@ async function fetchSource(src) {
         }
         label = publisher || label;
       }
-      const summary = src.id === 'gnews' ? '' : truncate(stripHtml(item.contentSnippet || item.content || item.summary || ''), 300);
+      const summary = src.id === 'gnews' ? '' : teaser(stripHtml(item.contentSnippet || item.content || item.summary || ''), 300);
       const c = classify(`${title} ${summary}`);
       const date = new Date(item.isoDate || item.pubDate || Date.now());
       return {
@@ -141,9 +141,18 @@ if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
   const cutoffIso = new Date(cutoff).toISOString();
 
   // Qué noticias ya están guardadas (así solo pagamos la IA por las nuevas).
-  const { data: existing, error: readError } = await db.from('articles').select('id').gte('published_at', cutoffIso).limit(5000);
+  const { data: existing, error: readError } = await db.from('articles').select('id, summary').gte('published_at', cutoffIso).limit(5000);
   if (readError) { console.error('❌ Error leyendo la base de datos:', readError.message); process.exit(1); }
   const known = new Set(existing.map((r) => r.id));
+
+  // Noticias ya guardadas cuyo resumen ha cambiado (p. ej. por un recorte mejor): solo se actualiza el resumen,
+  // para no pisar lo que haya añadido la IA.
+  const oldSummary = new Map(existing.map((r) => [r.id, r.summary || '']));
+  const resumed = articles.filter((a) => known.has(a.id) && oldSummary.get(a.id) !== a.summary);
+  for (let i = 0; i < resumed.length; i += 20) {
+    await Promise.all(resumed.slice(i, i + 20).map((a) => db.from('articles').update({ summary: a.summary }).eq('id', a.id)));
+  }
+  if (resumed.length) console.log(`✂️  ${resumed.length} resúmenes existentes reajustados`);
   const fresh = articles.filter((a) => !known.has(a.id));
 
   // Noticias ya guardadas que todavía no tienen alemán sencillo (por ejemplo, las de antes de activar la IA).
