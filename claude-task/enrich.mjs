@@ -31,13 +31,13 @@ const token = await login();
 
 if (cmd === 'fetch') {
   const limit = Math.min(Number(arg) || 40, 80);
-  const res = await fetch(`${URL_}/rest/v1/articles?select=id,source_id,source_label,title,summary&easy_german=is.null&order=published_at.desc&limit=${limit}`, { headers: headers(token) });
+  const res = await fetch(`${URL_}/rest/v1/articles?select=id,source_id,source_label,title,summary,easy_german&or=(easy_german.is.null,summary_es.is.null)&order=published_at.desc&limit=${limit}`, { headers: headers(token) });
   if (!res.ok) { console.error('Error leyendo noticias:', res.status, await res.text()); process.exit(1); }
   const items = await res.json();
   const out = {
     topics: taxonomy.topics.map((t) => ({ id: t.id, label: t.label, examples: t.keywords.slice(0, 8) })),
     stadtteile: taxonomy.stadtteile,
-    items: items.map((a) => ({ id: a.id, source: a.source_label, title: a.title, summary: a.summary || '' }))
+    items: items.map((a) => ({ id: a.id, source: a.source_label, title: a.title, summary: a.summary || '', ...(a.easy_german ? { easy_german: a.easy_german } : {}) }))
   };
   writeFileSync('pending.json', JSON.stringify(out, null, 1));
   console.log(`📥 ${items.length} noticias pendientes guardadas en pending.json`);
@@ -51,18 +51,23 @@ if (cmd === 'fetch') {
   let ok = 0, skipped = 0;
   for (const r of results) {
     const easy = clean(r?.easy_german);
-    if (!r?.id || !easy) { skipped++; continue; }
+    const es = clean(r?.summary_es);
+    if (!r?.id || (!easy && !es)) { skipped++; continue; }
     const rowRes = await fetch(`${URL_}/rest/v1/articles?select=source_id&id=eq.${encodeURIComponent(r.id)}`, { headers: headers(token) });
     const row = (await rowRes.json())[0];
     if (!row) { skipped++; continue; }
     const source = SOURCES.find((s) => s.id === row.source_id);
     const aiTopics = (Array.isArray(r.topics) ? r.topics : []).filter((t) => validTopics.has(t));
-    const body = {
-      easy_german: easy,
-      topics: [...new Set([...(source?.topics || []), ...aiTopics])].slice(0, 4),
-      stadtteile: [...new Set((Array.isArray(r.stadtteile) ? r.stadtteile : []).filter((s) => validBarrios.has(s)))],
-      is_mannheim: source?.regional ? r.is_mannheim !== false : true
-    };
+    // Si la noticia ya tenía alemán sencillo, solo llega el resumen en español.
+    const body = easy
+      ? {
+          easy_german: easy,
+          ...(es ? { summary_es: es } : {}),
+          topics: [...new Set([...(source?.topics || []), ...aiTopics])].slice(0, 4),
+          stadtteile: [...new Set((Array.isArray(r.stadtteile) ? r.stadtteile : []).filter((s) => validBarrios.has(s)))],
+          is_mannheim: source?.regional ? r.is_mannheim !== false : true
+        }
+      : { summary_es: es };
     const res = await fetch(`${URL_}/rest/v1/articles?id=eq.${encodeURIComponent(r.id)}`, {
       method: 'PATCH', headers: headers(token, { Prefer: 'return=representation' }), body: JSON.stringify(body)
     });

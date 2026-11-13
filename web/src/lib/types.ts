@@ -12,7 +12,8 @@ export type Article = {
   topics: string[]
   stadtteile: string[]
   is_mannheim: boolean
-  easy_german?: string | null // versión en alemán sencillo (la escribe la IA)
+  easy_german?: string | null // resumen en alemán sencillo (lo escribe la IA)
+  summary_es?: string | null  // el mismo resumen en español (lo escribe la IA)
 }
 
 export type Profile = {

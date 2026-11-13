@@ -15,6 +15,7 @@ create table if not exists public.articles (
   stadtteile    text[] default '{}',
   is_mannheim   boolean default true,
   easy_german   text,            -- fase 2: resumen en alemán sencillo hecho por IA
+  summary_es    text,            -- fase 2: el mismo resumen en español, hecho por IA
   created_at    timestamptz default now()
 );
 create index if not exists articles_published_idx on public.articles (published_at desc);
@@ -47,3 +48,6 @@ create policy "crear mi perfil" on public.profiles
 drop policy if exists "cambiar mi perfil" on public.profiles;
 create policy "cambiar mi perfil" on public.profiles
   for update to authenticated using (auth.uid() = id) with check (auth.uid() = id);
+
+-- Si la tabla ya existía antes de añadir summary_es, esta línea la añade sin tocar nada más.
+alter table public.articles add column if not exists summary_es text;

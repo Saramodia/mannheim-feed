@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { timeAgo, type Ranked } from '../lib/rank'
 
 // Dirección de la fuente original, sin "www.". Las noticias de Google News pasan por su propio enlace.
@@ -10,7 +11,20 @@ function sourceHost(link: string) {
   }
 }
 
+// El idioma elegido en el resumen se recuerda para las demás noticias (solo en este navegador).
+const LANG_KEY = 'mf-summary-lang'
+function savedLang(): 'de' | 'es' {
+  try { return localStorage.getItem(LANG_KEY) === 'es' ? 'es' : 'de' } catch { return 'de' }
+}
+
 export function ArticleItem({ a, showReasons }: { a: Ranked; showReasons: boolean }) {
+  const [lang, setLang] = useState<'de' | 'es'>(savedLang)
+  const chooseLang = (l: 'de' | 'es') => {
+    setLang(l)
+    try { localStorage.setItem(LANG_KEY, l) } catch { /* sin almacenamiento: no pasa nada */ }
+  }
+  const showEs = lang === 'es' && !!a.summary_es
+
   return (
     <li className="article">
       <a href={a.link} target="_blank" rel="noopener noreferrer" className="article-link">
@@ -36,8 +50,19 @@ export function ArticleItem({ a, showReasons }: { a: Ranked; showReasons: boolea
       {a.easy_german && (
         // Va fuera del enlace para que abrirlo no abra la noticia.
         <details className="easy">
-          <summary>Einfaches Deutsch</summary>
-          <p lang="de">{a.easy_german}</p>
+          <summary>Resumen</summary>
+          <div className="easy-box">
+            <div className="easy-head">
+              <span className="easy-badge">Creado con IA</span>
+              {a.summary_es && (
+                <div className="easy-lang" role="group" aria-label="Idioma del resumen">
+                  <button type="button" aria-pressed={!showEs} onClick={() => chooseLang('de')}>Einfaches Deutsch</button>
+                  <button type="button" aria-pressed={showEs} onClick={() => chooseLang('es')}>Español</button>
+                </div>
+              )}
+            </div>
+            <p lang={showEs ? 'es' : 'de'}>{showEs ? a.summary_es : a.easy_german}</p>
+          </div>
         </details>
       )}
     </li>
