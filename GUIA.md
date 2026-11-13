@@ -135,6 +135,10 @@ La clave solo la usa el recolector, dentro de GitHub. La app no la ve nunca.
 
 Coste estimado: con unas 150 noticias nuevas al día, menos de 1 dólar al mes con Haiku 5.5 (0,10 $ por millón de tokens de entrada y 0,50 $ por millón de salida, según la [página de precios](https://platform.claude.com/docs/en/about-claude/pricing)). Es una estimación, no una medición: lo real se ve en el registro de cada ejecución y en la pestaña **Usage** de platform.claude.com.
 
+### Alternativa sin API: tarea programada de Claude
+
+En lugar de la clave de la API, puede encargarse una **tarea programada de Claude** (gasta de tu suscripción, no cobra aparte). Varias veces al día, Claude lee en Supabase las noticias sin alemán sencillo, las procesa y guarda el resultado. Lo hace con un usuario propio (`claude-enricher@example.com`) que solo puede cambiar cuatro campos de las noticias: no puede borrar nada, ni ver perfiles. El permiso se crea con `supabase/enricher.sql`. Las instrucciones de la tarea están en `claude-task/INSTRUCCIONES.md`, y la validación (temas y barrios solo de la lista, sin HTML) en `claude-task/enrich.mjs`. El recolector no cambia: sin clave de API simplemente deja esos campos vacíos.
+
 ### Ideas para más adelante
 - Puntuar cada noticia según tu perfil completo, en lugar de solo etiquetarla.
 - Un resumen diario con lo más relevante para ti.
