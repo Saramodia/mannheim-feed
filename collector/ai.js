@@ -1,7 +1,7 @@
 // LA IA (fase 2)
 // Para cada noticia nueva, le pedimos a Claude tres cosas en una sola petición:
 //   1. Una versión en alemán sencillo (Einfache Sprache).
-//   2. Un resumen corto en español.
+//   2. Un resumen corto en español, y el título y el texto traducidos al español.
 //   3. El tema, el barrio y si habla de Mannheim, con más criterio que las palabras clave.
 // Si algo falla (sin clave, sin saldo, sin red), el recolector sigue funcionando sin IA.
 
@@ -19,6 +19,8 @@ For every item you receive, return an object with these fields:
 - "id": copy the id unchanged.
 - "easy_german": the news in Einfache Sprache (German, level A2 to B1). Rules: at most 2 sentences, each with at most 12 words; active voice; common words; explain or replace difficult words; one idea per sentence. Use only facts that are in the title or summary. If there is only a title, write one simple sentence that restates it. Never add names, numbers, causes or details that are not in the item.
 - "summary_es": the same news as a short summary in Spanish: at most 2 sentences, same facts as easy_german, nothing added. Keep names of people, places and organisations as they are.
+- "title_es": the title translated into Spanish. Faithful translation, same meaning and tone, nothing added.
+- "teaser_es": the summary translated into Spanish, faithfully and completely, nothing added. Empty string if there is no summary.
 - "topics": 0 to 3 topic ids that fit best, only from the topic list you are given.
 - "stadtteile": the Mannheim districts the news is about, only from the district list you are given. Empty if none.
 - "is_mannheim": true if the news is about Mannheim, one of its districts, or something clearly located in Mannheim. false if it is about another place (Heidelberg, Ludwigshafen, Stuttgart, ...) unless Mannheim is directly involved.
@@ -71,9 +73,9 @@ function parseJsonArray(text) {
   return data;
 }
 
-const cleanText = (s) => String(s ?? '').replace(/<[^>]*>/g, ' ').replace(/[\u0000-\u001f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 400);
+const cleanText = (s, max = 400) => String(s ?? '').replace(/<[^>]*>/g, ' ').replace(/[\u0000-\u001f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max);
 
-// Devuelve un Map: id de noticia → { easy_german, summary_es, topics, stadtteile, is_mannheim }
+// Devuelve un Map: id de noticia → { easy_german, summary_es, title_es, teaser_es, topics, stadtteile, is_mannheim }
 export async function enrichArticles(items, taxonomy, apiKey) {
   const result = new Map();
   const validTopics = new Set(taxonomy.topics.map((t) => t.id));
@@ -86,7 +88,7 @@ export async function enrichArticles(items, taxonomy, apiKey) {
     try {
       const json = await callApi(apiKey, {
         model: MODEL,
-        max_tokens: 6000,
+        max_tokens: 12000,
         system: SYSTEM,
         messages: [{ role: 'user', content: buildUserMessage(batch, taxonomy) }]
       });
@@ -98,6 +100,8 @@ export async function enrichArticles(items, taxonomy, apiKey) {
         result.set(r.id, {
           easy_german: cleanText(r.easy_german),
           summary_es: cleanText(r.summary_es),
+          title_es: cleanText(r.title_es, 300),
+          teaser_es: cleanText(r.teaser_es, 600),
           topics: [...new Set((Array.isArray(r.topics) ? r.topics : []).filter((t) => validTopics.has(t)))].slice(0, 3),
           stadtteile: [...new Set((Array.isArray(r.stadtteile) ? r.stadtteile : []).filter((s) => validBarrios.has(s)))],
           is_mannheim: r.is_mannheim !== false

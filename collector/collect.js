@@ -123,6 +123,8 @@ function applyAi(a, r) {
     ...a,
     easy_german: r.easy_german,
     summary_es: r.summary_es,
+    title_es: r.title_es || null,
+    teaser_es: r.teaser_es || null,
     topics: [...new Set([...(src?.topics || []), ...r.topics])],
     stadtteile: r.stadtteile,
     is_mannheim: src?.regional ? r.is_mannheim : true
@@ -159,7 +161,7 @@ if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
   // Noticias ya guardadas que todavía no tienen alemán sencillo (por ejemplo, las de antes de activar la IA).
   let backlog = [];
   if (AI_KEY) {
-    const { data } = await db.from('articles').select('*').or('easy_german.is.null,summary_es.is.null')
+    const { data } = await db.from('articles').select('*').or('easy_german.is.null,summary_es.is.null,title_es.is.null')
       .gte('published_at', cutoffIso).order('published_at', { ascending: false }).limit(AI_MAX);
     backlog = data || [];
   }

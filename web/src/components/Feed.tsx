@@ -1,12 +1,13 @@
 import { useMemo, useState } from 'react'
 import taxonomy from '../taxonomy.json'
 import { forYou, rank } from '../lib/rank'
-import type { Article, Profile } from '../lib/types'
+import type { Article, Lang, Profile } from '../lib/types'
 import { ArticleItem } from './ArticleItem'
 
 type Props = {
   articles: Article[]
   profile: Profile
+  lang: Lang
   loading: boolean
   error: string | null
   onRetry: () => void
@@ -15,7 +16,7 @@ type Props = {
 
 const PAGE = 30
 
-export function Feed({ articles, profile, loading, error, onRetry, onOpenProfile }: Props) {
+export function Feed({ articles, profile, lang, loading, error, onRetry, onOpenProfile }: Props) {
   const [view, setView] = useState<'foryou' | 'all'>('foryou')
   const [topic, setTopic] = useState<string | null>(null)
   const [shown, setShown] = useState(PAGE)
@@ -70,7 +71,7 @@ export function Feed({ articles, profile, loading, error, onRetry, onOpenProfile
       )}
 
       <ul className="articles">
-        {list.slice(0, shown).map((a) => <ArticleItem key={a.id} a={a} showReasons={view === 'foryou'} />)}
+        {list.slice(0, shown).map((a) => <ArticleItem key={a.id} a={a} lang={lang} showReasons={view === 'foryou'} />)}
       </ul>
 
       {list.length > shown && (

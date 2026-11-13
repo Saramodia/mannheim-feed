@@ -14,7 +14,12 @@ export type Article = {
   is_mannheim: boolean
   easy_german?: string | null // resumen en alemán sencillo (lo escribe la IA)
   summary_es?: string | null  // el mismo resumen en español (lo escribe la IA)
+  title_es?: string | null    // título traducido al español (IA)
+  teaser_es?: string | null   // texto traducido al español (IA)
 }
+
+// Idioma en el que se leen las noticias: original en alemán, o traducido al español.
+export type Lang = 'de' | 'es'
 
 export type Profile = {
   topics: string[]        // temas que sigues

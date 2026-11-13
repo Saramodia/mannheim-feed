@@ -1,5 +1,5 @@
-import { useState } from 'react'
 import { timeAgo, type Ranked } from '../lib/rank'
+import type { Lang } from '../lib/types'
 
 // Dirección de la fuente original, sin "www.". Las noticias de Google News pasan por su propio enlace.
 function sourceHost(link: string) {
@@ -11,19 +11,12 @@ function sourceHost(link: string) {
   }
 }
 
-// El idioma elegido en el resumen se recuerda para las demás noticias (solo en este navegador).
-const LANG_KEY = 'mf-summary-lang'
-function savedLang(): 'de' | 'es' {
-  try { return localStorage.getItem(LANG_KEY) === 'es' ? 'es' : 'de' } catch { return 'de' }
-}
-
-export function ArticleItem({ a, showReasons }: { a: Ranked; showReasons: boolean }) {
-  const [lang, setLang] = useState<'de' | 'es'>(savedLang)
-  const chooseLang = (l: 'de' | 'es') => {
-    setLang(l)
-    try { localStorage.setItem(LANG_KEY, l) } catch { /* sin almacenamiento: no pasa nada */ }
-  }
-  const showEs = lang === 'es' && !!a.summary_es
+export function ArticleItem({ a, lang, showReasons }: { a: Ranked; lang: Lang; showReasons: boolean }) {
+  // En español usamos la traducción si ya existe; si no, el original en alemán.
+  const esTitle = lang === 'es' && !!a.title_es
+  const esText = lang === 'es' && !!a.teaser_es
+  const esSummary = lang === 'es' && !!a.summary_es
+  const summary = esText ? a.teaser_es : a.summary
 
   return (
     <li className="article">
@@ -32,9 +25,10 @@ export function ArticleItem({ a, showReasons }: { a: Ranked; showReasons: boolea
           <p className="article-meta">
             <span className="article-source">{a.source_label}</span>
             <time dateTime={a.published_at}>{timeAgo(a.published_at)}</time>
+            {esTitle && <span className="article-ai">Traducido con IA</span>}
           </p>
-          <h2 className="article-title">{a.title}</h2>
-          {a.summary && <p className="article-summary">{a.summary}</p>}
+          <h2 className="article-title" lang={esTitle ? 'es' : 'de'}>{esTitle ? a.title_es : a.title}</h2>
+          {summary && <p className="article-summary" lang={esText ? 'es' : 'de'}>{summary}</p>}
           <p className="article-origin">
             Leer en <strong>{sourceHost(a.link) || a.source_label}</strong> ↗
           </p>
@@ -52,16 +46,8 @@ export function ArticleItem({ a, showReasons }: { a: Ranked; showReasons: boolea
         <details className="easy">
           <summary>Resumen</summary>
           <div className="easy-box">
-            <div className="easy-head">
-              <span className="easy-badge">Creado con IA</span>
-              {a.summary_es && (
-                <div className="easy-lang" role="group" aria-label="Idioma del resumen">
-                  <button type="button" aria-pressed={!showEs} onClick={() => chooseLang('de')}>Einfaches Deutsch</button>
-                  <button type="button" aria-pressed={showEs} onClick={() => chooseLang('es')}>Español</button>
-                </div>
-              )}
-            </div>
-            <p lang={showEs ? 'es' : 'de'}>{showEs ? a.summary_es : a.easy_german}</p>
+            <span className="easy-badge">Creado con IA · {esSummary ? 'español' : 'alemán sencillo'}</span>
+            <p lang={esSummary ? 'es' : 'de'}>{esSummary ? a.summary_es : a.easy_german}</p>
           </div>
         </details>
       )}

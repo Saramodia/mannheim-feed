@@ -31,13 +31,26 @@ const token = await login();
 
 if (cmd === 'fetch') {
   const limit = Math.min(Number(arg) || 40, 80);
-  const res = await fetch(`${URL_}/rest/v1/articles?select=id,source_id,source_label,title,summary,easy_german&or=(easy_german.is.null,summary_es.is.null)&order=published_at.desc&limit=${limit}`, { headers: headers(token) });
+  const res = await fetch(`${URL_}/rest/v1/articles?select=id,source_label,title,summary,easy_german,summary_es,title_es,teaser_es&or=(easy_german.is.null,summary_es.is.null,title_es.is.null)&order=published_at.desc&limit=${limit}`, { headers: headers(token) });
   if (!res.ok) { console.error('Error leyendo noticias:', res.status, await res.text()); process.exit(1); }
   const items = await res.json();
+  // Para cada noticia, qué campos faltan. Si falta easy_german, falta todo (incluidos temas y barrios).
+  const missingOf = (a) => {
+    if (!a.easy_german) return ['easy_german', 'summary_es', 'title_es', ...(a.summary ? ['teaser_es'] : []), 'topics', 'stadtteile', 'is_mannheim'];
+    return [
+      ...(a.summary_es ? [] : ['summary_es']),
+      ...(a.title_es ? [] : ['title_es']),
+      ...(a.summary && !a.teaser_es ? ['teaser_es'] : [])
+    ];
+  };
   const out = {
     topics: taxonomy.topics.map((t) => ({ id: t.id, label: t.label, examples: t.keywords.slice(0, 8) })),
     stadtteile: taxonomy.stadtteile,
-    items: items.map((a) => ({ id: a.id, source: a.source_label, title: a.title, summary: a.summary || '', ...(a.easy_german ? { easy_german: a.easy_german } : {}) }))
+    items: items.map((a) => ({
+      id: a.id, source: a.source_label, title: a.title, summary: a.summary || '',
+      ...(a.easy_german ? { easy_german: a.easy_german } : {}),
+      missing: missingOf(a)
+    }))
   };
   writeFileSync('pending.json', JSON.stringify(out, null, 1));
   console.log(`📥 ${items.length} noticias pendientes guardadas en pending.json`);
@@ -46,28 +59,31 @@ if (cmd === 'fetch') {
   if (!Array.isArray(results)) { console.error('results.json debe ser una lista'); process.exit(1); }
   const validTopics = new Set(taxonomy.topics.map((t) => t.id));
   const validBarrios = new Set(taxonomy.stadtteile);
-  const clean = (s) => String(s ?? '').replace(/<[^>]*>/g, ' ').replace(/[\u0000-\u001f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 400);
+  const clean = (s, max = 400) => String(s ?? '').replace(/<[^>]*>/g, ' ').replace(/[\u0000-\u001f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max);
 
   let ok = 0, skipped = 0;
   for (const r of results) {
-    const easy = clean(r?.easy_german);
-    const es = clean(r?.summary_es);
-    if (!r?.id || (!easy && !es)) { skipped++; continue; }
-    const rowRes = await fetch(`${URL_}/rest/v1/articles?select=source_id&id=eq.${encodeURIComponent(r.id)}`, { headers: headers(token) });
-    const row = (await rowRes.json())[0];
-    if (!row) { skipped++; continue; }
-    const source = SOURCES.find((s) => s.id === row.source_id);
-    const aiTopics = (Array.isArray(r.topics) ? r.topics : []).filter((t) => validTopics.has(t));
-    // Si la noticia ya tenía alemán sencillo, solo llega el resumen en español.
-    const body = easy
-      ? {
-          easy_german: easy,
-          ...(es ? { summary_es: es } : {}),
-          topics: [...new Set([...(source?.topics || []), ...aiTopics])].slice(0, 4),
-          stadtteile: [...new Set((Array.isArray(r.stadtteile) ? r.stadtteile : []).filter((s) => validBarrios.has(s)))],
-          is_mannheim: source?.regional ? r.is_mannheim !== false : true
-        }
-      : { summary_es: es };
+    if (!r?.id) { skipped++; continue; }
+    const body = {};
+    const easy = clean(r.easy_german);
+    if (easy) {
+      const rowRes = await fetch(`${URL_}/rest/v1/articles?select=source_id&id=eq.${encodeURIComponent(r.id)}`, { headers: headers(token) });
+      const row = (await rowRes.json())[0];
+      if (!row) { skipped++; continue; }
+      const source = SOURCES.find((s) => s.id === row.source_id);
+      const aiTopics = (Array.isArray(r.topics) ? r.topics : []).filter((t) => validTopics.has(t));
+      Object.assign(body, {
+        easy_german: easy,
+        topics: [...new Set([...(source?.topics || []), ...aiTopics])].slice(0, 4),
+        stadtteile: [...new Set((Array.isArray(r.stadtteile) ? r.stadtteile : []).filter((s) => validBarrios.has(s)))],
+        is_mannheim: source?.regional ? r.is_mannheim !== false : true
+      });
+    }
+    for (const [field, max] of [['summary_es', 400], ['title_es', 300], ['teaser_es', 600]]) {
+      const v = clean(r[field], max);
+      if (v) body[field] = v;
+    }
+    if (!Object.keys(body).length) { skipped++; continue; }
     const res = await fetch(`${URL_}/rest/v1/articles?id=eq.${encodeURIComponent(r.id)}`, {
       method: 'PATCH', headers: headers(token, { Prefer: 'return=representation' }), body: JSON.stringify(body)
     });

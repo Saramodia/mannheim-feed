@@ -5,9 +5,15 @@ import { Login } from './components/Login'
 import { ProfileView } from './components/ProfileView'
 import { loadArticles, loadProfile, saveProfile } from './lib/data'
 import { isDemo, supabase } from './lib/supabase'
-import { EMPTY_PROFILE, type Article, type Profile } from './lib/types'
+import { EMPTY_PROFILE, type Article, type Lang, type Profile } from './lib/types'
 
 type Tab = 'feed' | 'profile'
+
+// El idioma elegido se recuerda en este navegador.
+const LANG_KEY = 'mf-lang'
+function savedLang(): Lang {
+  try { return localStorage.getItem(LANG_KEY) === 'es' ? 'es' : 'de' } catch { return 'de' }
+}
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null)
@@ -19,6 +25,11 @@ export default function App() {
   const [profile, setProfile] = useState<Profile>(EMPTY_PROFILE)
   const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
   const saveTimer = useRef<number | undefined>(undefined)
+  const [lang, setLang] = useState<Lang>(savedLang)
+  const chooseLang = (l: Lang) => {
+    setLang(l)
+    try { localStorage.setItem(LANG_KEY, l) } catch { /* sin almacenamiento: no pasa nada */ }
+  }
   const userId = session?.user.id
 
   // 1. ¿Hay alguien conectado? (solo con Supabase)
@@ -66,12 +77,18 @@ export default function App() {
           <img src={`${import.meta.env.BASE_URL}icon.svg`} alt="" width="28" height="28" />
           <span>Mannheim Feed</span>
         </div>
-        {isDemo && <span className="demo-badge" title="Sin base de datos: noticias de prueba y perfil solo en este navegador">Modo prueba</span>}
+        <div className="topbar-end">
+          {isDemo && <span className="demo-badge" title="Sin base de datos: noticias de prueba y perfil solo en este navegador">Modo prueba</span>}
+          <div className="lang-switch" role="group" aria-label="Idioma de las noticias">
+            <button type="button" aria-pressed={lang === 'de'} onClick={() => chooseLang('de')} title="Original en alemán">DE</button>
+            <button type="button" aria-pressed={lang === 'es'} onClick={() => chooseLang('es')} title="Traducido al español con IA">ES</button>
+          </div>
+        </div>
       </header>
 
       <main className="content">
         {tab === 'feed' ? (
-          <Feed articles={articles} profile={profile} loading={loading} error={error}
+          <Feed articles={articles} profile={profile} lang={lang} loading={loading} error={error}
             onRetry={fetchArticles} onOpenProfile={() => setTab('profile')} />
         ) : (
           <ProfileView profile={profile} onChange={updateProfile} articles={articles} saveState={saveState}
