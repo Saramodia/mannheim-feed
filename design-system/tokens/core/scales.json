@@ -1,0 +1,112 @@
+{
+  "space": {
+    "$type": "dimension",
+    "$description": "Spacing scale on a 4px grid. The key is the multiplier of 4px (space.4 = 16px).",
+    "0":  { "$value": "0px" },
+    "1":  { "$value": "4px" },
+    "2":  { "$value": "8px" },
+    "3":  { "$value": "12px" },
+    "4":  { "$value": "16px" },
+    "5":  { "$value": "20px" },
+    "6":  { "$value": "24px" },
+    "8":  { "$value": "32px" },
+    "10": { "$value": "40px" },
+    "12": { "$value": "48px" },
+    "24": { "$value": "96px" }
+  },
+  "radius": {
+    "$type": "dimension",
+    "xs":     { "$value": "6px" },
+    "sm":     { "$value": "8px" },
+    "md":     { "$value": "10px" },
+    "lg":     { "$value": "12px" },
+    "xl":     { "$value": "16px" },
+    "pill":   { "$value": "99px" },
+    "circle": { "$value": "50%" }
+  },
+  "font": {
+    "family": {
+      "$type": "fontFamily",
+      "sans": { "$value": "'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif", "$description": "Archivo is a variable font with weight and width axes. System fonts are the fallback." }
+    },
+    "size": {
+      "$type": "dimension",
+      "caption":  { "$value": "0.75rem", "$description": "12px. Badges, small labels." },
+      "small":    { "$value": "0.8rem",  "$description": "12.8px. Meta lines, hints." },
+      "body-sm":  { "$value": "0.9rem",  "$description": "14.4px. Summaries, chips." },
+      "body":     { "$value": "1rem",    "$description": "16px. Default text." },
+      "title":    { "$value": "1.1rem",  "$description": "17.6px. Article titles, group titles." },
+      "headline": { "$value": "1.6rem",  "$description": "25.6px. Page headings." }
+    },
+    "weight": {
+      "$type": "fontWeight",
+      "regular":  { "$value": 400 },
+      "medium":   { "$value": 550 },
+      "semibold": { "$value": 600 },
+      "bold":     { "$value": 650 },
+      "heavy":    { "$value": 750 }
+    },
+    "stretch": {
+      "$type": "number",
+      "$description": "Archivo width axis, in percent (font-stretch).",
+      "condensed": { "$value": 92 },
+      "normal":    { "$value": 100 },
+      "expanded":  { "$value": 110 },
+      "wide":      { "$value": 115 }
+    },
+    "line-height": {
+      "$type": "number",
+      "tight": { "$value": 1.3 },
+      "base":  { "$value": 1.5 }
+    },
+    "letter-spacing": {
+      "$type": "dimension",
+      "tight":  { "$value": "-0.02em" },
+      "snug":   { "$value": "-0.01em" },
+      "subtle": { "$value": "-0.005em" },
+      "wide":   { "$value": "0.02em" }
+    }
+  },
+  "size": {
+    "$type": "dimension",
+    "tap-target":   { "$value": "44px", "$description": "Minimum touch target (Apple HIG 44pt, WCAG 2.5.5)." },
+    "control-sm":   { "$value": "36px" },
+    "control-xs":   { "$value": "32px" },
+    "icon-sm":      { "$value": "18px" },
+    "icon-md":      { "$value": "24px" },
+    "thumb-width":  { "$value": "88px" },
+    "thumb-height": { "$value": "88px" },
+    "content-max":  { "$value": "680px", "$description": "Maximum width of the reading column." },
+    "measure":      { "$value": "60ch",  "$description": "Maximum line length for running text." }
+  },
+  "breakpoint": {
+    "$type": "dimension",
+    "$description": "CSS cannot read custom properties inside @media. These are emitted to TS and JSON, and mirrored by hand in CSS. See docs/usage.md.",
+    "tablet": { "$value": "760px" }
+  },
+  "shadow": {
+    "$type": "shadow",
+    "raised": {
+      "$value": { "color": "{color.black-alpha.8}", "offsetX": "0px", "offsetY": "1px", "blur": "2px", "spread": "0px" },
+      "$description": "Selected segment."
+    },
+    "knob": {
+      "$value": { "color": "{color.black-alpha.25}", "offsetX": "0px", "offsetY": "1px", "blur": "2px", "spread": "0px" },
+      "$description": "Switch knob."
+    }
+  },
+  "motion": {
+    "duration": {
+      "$type": "duration",
+      "fast": { "$value": "150ms" }
+    },
+    "easing": {
+      "$type": "cubicBezier",
+      "standard": { "$value": [0.25, 0.1, 0.25, 1] }
+    }
+  },
+  "z": {
+    "$type": "number",
+    "sticky": { "$value": 10 }
+  }
+}

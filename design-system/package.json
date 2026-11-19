@@ -1,0 +1,15 @@
+{
+  "name": "@mannheim-feed/design-system",
+  "version": "1.0.0",
+  "description": "Design tokens and guidelines for Mannheim Feed (browser and installed PWA).",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/contrast.mjs",
+    "verify": "npm run build && npm run check"
+  },
+  "devDependencies": {
+    "style-dictionary": "^5.0.0"
+  }
+}

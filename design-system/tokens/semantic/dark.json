@@ -1,0 +1,33 @@
+{
+  "color": {
+    "$type": "color",
+    "bg": {
+      "page":    { "$value": "{color.neutral.950}" },
+      "surface": { "$value": "{color.neutral.800}" }
+    },
+    "text": {
+      "primary":   { "$value": "{color.neutral.100}" },
+      "secondary": { "$value": "{color.neutral.400}" },
+      "on-accent": { "$value": "{color.neutral.1000}" }
+    },
+    "border": {
+      "default": { "$value": "{color.neutral.700}" }
+    },
+    "accent": {
+      "default": { "$value": "{color.blue.300}" },
+      "soft":    { "$value": "{color.blue.900}" }
+    },
+    "feedback": {
+      "danger": { "$value": "{color.red.300}" }
+    },
+    "focus": {
+      "ring": { "$value": "{color.blue.300}" }
+    },
+    "brand": {
+      "accent-mark": { "$value": "{color.red.400}" }
+    },
+    "control": {
+      "knob": { "$value": "{color.neutral.0}" }
+    }
+  }
+}

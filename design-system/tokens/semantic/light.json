@@ -1,0 +1,33 @@
+{
+  "color": {
+    "$type": "color",
+    "bg": {
+      "page":    { "$value": "{color.neutral.50}",  "$description": "App background." },
+      "surface": { "$value": "{color.neutral.0}",   "$description": "Cards, inputs, tab bar." }
+    },
+    "text": {
+      "primary":   { "$value": "{color.neutral.900}" },
+      "secondary": { "$value": "{color.neutral.600}", "$description": "Meta text, hints, inactive controls." },
+      "on-accent": { "$value": "{color.neutral.0}",   "$description": "Text and icons on the accent colour." }
+    },
+    "border": {
+      "default": { "$value": "{color.neutral.200}", "$description": "Dividers, outlines, switch track off." }
+    },
+    "accent": {
+      "default": { "$value": "{color.blue.600}", "$description": "Primary action, links, selected state." },
+      "soft":    { "$value": "{color.blue.50}",  "$description": "Tinted background for secondary emphasis." }
+    },
+    "feedback": {
+      "danger": { "$value": "{color.red.500}", "$description": "Errors and warnings only." }
+    },
+    "focus": {
+      "ring": { "$value": "{color.blue.600}" }
+    },
+    "brand": {
+      "accent-mark": { "$value": "{color.red.400}", "$description": "Coral square in the logo. Not for UI." }
+    },
+    "control": {
+      "knob": { "$value": "{color.neutral.0}", "$description": "Switch knob." }
+    }
+  }
+}

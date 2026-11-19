@@ -4,3 +4,6 @@ dist/
 .env.local
 *.log
 .DS_Store
+
+# The design system build output is committed on purpose (the web build imports it).
+!design-system/dist/
