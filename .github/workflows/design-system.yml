@@ -1,0 +1,59 @@
+# Protects the design system: tokens, generated files and version must agree.
+name: Design system check
+
+on:
+  pull_request:
+    paths:
+      - 'design-system/**'
+      - 'web/src/index.css'
+  push:
+    branches: [main]
+    paths:
+      - 'design-system/**'
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: design-system
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: design-system/package-lock.json
+      - run: npm ci
+
+      - name: Build tokens
+        run: npm run build
+
+      - name: dist/ must match the tokens
+        run: |
+          if ! git diff --exit-code -- dist; then
+            echo "::error::design-system/dist is out of date. Run 'npm run build' in design-system/ and commit the result."
+            exit 1
+          fi
+          if [ -n "$(git ls-files --others --exclude-standard -- dist)" ]; then
+            echo "::error::design-system/dist has new generated files that are not committed."
+            exit 1
+          fi
+
+      - name: Colour contrast
+        run: npm run check
+
+      - name: Version bump when tokens change (pull requests only)
+        if: github.event_name == 'pull_request'
+        working-directory: .
+        run: |
+          changed=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD")
+          if echo "$changed" | grep -q '^design-system/tokens/'; then
+            echo "$changed" | grep -q '^design-system/package.json$' || { echo "::error::Tokens changed but the version in design-system/package.json was not bumped (see design-system/docs/versioning.md)."; exit 1; }
+            echo "$changed" | grep -q '^design-system/CHANGELOG.md$' || { echo "::error::Tokens changed but design-system/CHANGELOG.md has no new entry."; exit 1; }
+          fi

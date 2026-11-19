@@ -1,6 +1,17 @@
 import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
+// Brand colours come from the design system (design-system/tokens), not from hand-typed hex codes.
+import { themes } from '../design-system/dist/ts/tokens.ts'
+
+const themeColor = themes.light.accent.default // browser / status bar colour
+const backgroundColor = themes.light.bg.page // splash screen colour
+
+// Fills %THEME_COLOR% in index.html.
+const designTokensHtml = (): Plugin => ({
+  name: 'design-tokens-html',
+  transformIndexHtml: (html) => html.replaceAll('%THEME_COLOR%', themeColor)
+})
 
 // VITE_BASE es la "carpeta" donde vive la app en internet.
 // En GitHub Pages será /mannheim-feed/ (el nombre del repositorio); en local, /.
@@ -8,8 +19,11 @@ const base = process.env.VITE_BASE || '/'
 
 export default defineConfig({
   base,
+  // The dev server may read the design-system folder, which lives next to web/.
+  server: { fs: { allow: ['..'] } },
   plugins: [
     react(),
+    designTokensHtml(),
     // Esto convierte la web en una PWA: se puede "instalar" en el móvil como una app.
     process.env.VITE_NO_PWA ? null : VitePWA({
       registerType: 'autoUpdate',
@@ -19,8 +33,8 @@ export default defineConfig({
         short_name: 'MA Feed',
         description: 'Noticias de Mannheim filtradas según tus intereses',
         lang: 'es',
-        theme_color: '#1E4BD2',
-        background_color: '#F4F6FA',
+        theme_color: themeColor,
+        background_color: backgroundColor,
         display: 'standalone',
         start_url: base,
         scope: base,

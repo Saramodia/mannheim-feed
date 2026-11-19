@@ -1,0 +1,60 @@
+# Publishes a GitHub Release when a tag like design-system-v1.1.0 is pushed.
+name: Design system release
+
+on:
+  push:
+    tags:
+      - 'design-system-v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: design-system
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: design-system/package-lock.json
+      - run: npm ci
+
+      - name: Tag must match package.json
+        run: |
+          version=$(node -p "require('./package.json').version")
+          if [ "${GITHUB_REF_NAME}" != "design-system-v${version}" ]; then
+            echo "::error::Tag ${GITHUB_REF_NAME} does not match package.json version ${version}."
+            exit 1
+          fi
+          echo "VERSION=${version}" >> "$GITHUB_ENV"
+
+      - run: npm run verify
+
+      - name: Collect release notes from CHANGELOG.md
+        run: |
+          awk -v v="$VERSION" '
+            $0 ~ "^## " v " " { found=1; next }
+            found && /^## / { exit }
+            found { print }
+          ' CHANGELOG.md > "$RUNNER_TEMP/notes.md"
+          if [ ! -s "$RUNNER_TEMP/notes.md" ]; then
+            echo "::error::CHANGELOG.md has no section for version ${VERSION}."
+            exit 1
+          fi
+
+      - name: Zip the generated files
+        run: |
+          cd dist && zip -r "../design-system-dist.zip" css ts json preview.html
+
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" design-system-dist.zip \
+            --title "Design system v${VERSION}" \
+            --notes-file "$RUNNER_TEMP/notes.md"

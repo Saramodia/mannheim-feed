@@ -1,0 +1,34 @@
+{
+  "color": {
+    "$type": "color",
+    "$description": "Core palette. Raw values only. Never use these directly in components: use the semantic tokens in tokens/semantic/.",
+    "neutral": {
+      "0":    { "$value": "#FFFFFF" },
+      "50":   { "$value": "#F4F6FA" },
+      "100":  { "$value": "#E9ECF2" },
+      "200":  { "$value": "#DFE3EB" },
+      "400":  { "$value": "#9AA3B5" },
+      "600":  { "$value": "#5B6475" },
+      "700":  { "$value": "#2A303C" },
+      "800":  { "$value": "#181C25" },
+      "900":  { "$value": "#161B26" },
+      "950":  { "$value": "#10131A" },
+      "1000": { "$value": "#0D1220" }
+    },
+    "blue": {
+      "50":  { "$value": "#E3EAFC" },
+      "300": { "$value": "#7FA0FF" },
+      "600": { "$value": "#1E4BD2", "$description": "Brand blue (\"Quadrat\")." },
+      "900": { "$value": "#1E2A4A" }
+    },
+    "red": {
+      "300": { "$value": "#FF7A70" },
+      "400": { "$value": "#FF5A4E", "$description": "Brand coral: the centre square of the app icon." },
+      "500": { "$value": "#E2463B" }
+    },
+    "black-alpha": {
+      "8":  { "$value": "#00000014" },
+      "25": { "$value": "#00000040" }
+    }
+  }
+}
