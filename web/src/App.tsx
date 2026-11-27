@@ -6,6 +6,8 @@ import { ProfileView } from './components/ProfileView'
 import { loadArticles, loadProfile, saveProfile } from './lib/data'
 import { isDemo, supabase } from './lib/supabase'
 import { EMPTY_PROFILE, type Article, type Lang, type Profile } from './lib/types'
+import { Icon } from './components/Icon'
+import { icons } from './lib/icons'
 
 type Tab = 'feed' | 'profile'
 
@@ -98,11 +100,11 @@ export default function App() {
 
       <nav className="tabbar" aria-label="Secciones">
         <button aria-current={tab === 'feed' ? 'page' : undefined} onClick={() => setTab('feed')}>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 12h16M4 19h10" /></svg>
+          <Icon path={icons.tabFeed} />
           Noticias
         </button>
         <button aria-current={tab === 'profile' ? 'page' : undefined} onClick={() => setTab('profile')}>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6" /></svg>
+          <Icon path={icons.tabProfile} />
           Perfil
         </button>
       </nav>

@@ -23,12 +23,46 @@ design-system/
 └── package.json            the design system's own version number lives here
 ```
 
+## Design principles
+
+**Daylight and golden hour; soft, calm and easy to read.** The colour rules are enforced by `npm run check`, not just written down.
+
+- **Daylight and golden hour.** Light mode is *daylight*: light, warm cream paper, espresso ink, terracotta as the primary colour. Dark mode is *golden hour*: dusk browns lit by a low amber sun. No blue anywhere.
+- **Calm colour.** Warm but muted (no neon orange). Error rose is kept apart from the terracotta by hue, so an error never looks like a button.
+- **No glare.** Off-white surfaces and charcoal text instead of pure white and black. Body text contrast must stay between 7:1 (WCAG AAA) and 14:1.
+- **Readable text.** Nothing smaller than 13px; running text at 15–16px with 1.6 line spacing; lines no longer than about 60 characters.
+- **One typeface: Inconsolata.** A monospace font, bundled with the app (works offline, never loaded from Google). `font-size-adjust: 0.5` makes up for its short lowercase letters, so it reads as large as a sans-serif.
+- **Simple, single-colour icons** from Pictogrammers. See [Icons](#icons).
+- **Crisp shapes, smooth motion.** Subtle corners only (2–8px, no pill or round shapes), light shadows, 200ms ease-out transitions (switched off when the phone asks for reduced motion).
+
+## Icons
+
+All icons come from **[Pictogrammers](https://pictogrammers.com/library/mdi/)** (Material Design Icons, npm package `@mdi/js`, Apache 2.0).
+
+- **Simple and filled:** one solid shape per icon, drawn on a 24px grid. No outlines mixed with fills, no multi-colour icons, no emoji.
+- **One plain colour:** icons are painted with `currentColor`, so they take the colour of the text next to them. In daylight that is driftwood grey (`color.icon.default`) or terracotta when selected (`color.icon.active`); at golden hour, dry grass or amber.
+- **Sizes:** `size.icon-xs` 16px inside a line of text (chips, link arrow, remove), `size.icon-sm` 18px for tabs on wide screens, `size.icon-md` 24px for tabs on phones.
+- **Contrast:** icons need 3:1 against their background (WCAG non-text contrast); `npm run check` tests this.
+- **Where:** the list lives in `web/src/lib/icons.ts`; draw one with `<Icon path={…} />` from `web/src/components/Icon.tsx`.
+
+| Use | Icon |
+|---|---|
+| Tab "Noticias" | `newspaper-variant` |
+| Tab "Perfil" | `account` |
+| Open the original article | `arrow-top-right` |
+| Remove a keyword | `close` |
+| Topics | `tram`, `drama-masks`, `party-popper`, `police-badge`, `bank`, `home-city`, `briefcase`, `soccer`, `school`, `tree`, `stethoscope`, `silverware-fork-knife` |
+
+To add or change an icon: find it in the Pictogrammers library, import it in `web/src/lib/icons.ts` as `mdi` + its name in CamelCase (`party-popper` → `mdiPartyPopper`).
+
+**The app icon** (`web/public/icon.svg` and the PNGs) is generated from the tokens: `npm run icons` inside `web/`. It shows Mannheim's grid of squares (the *Quadrate*) in cream on terracotta, with the centre square in gold: the sun at golden hour.
+
 ## The three layers
 
 | Layer | Question it answers | Example | Who may use it |
 |---|---|---|---|
-| **Core** | "What values exist?" | `color.blue.600 = #1E4BD2` | Only other tokens |
-| **Semantic** | "What does this value mean?" | `color.accent.default → color.blue.600` | App code (CSS, TS) |
+| **Core** | "What values exist?" | `color.ember.600 = #9A4B2A` | Only other tokens |
+| **Semantic** | "What does this value mean?" | `color.accent.default → color.ember.600` | App code (CSS, TS) |
 | **Component** | "How is this component built?" | `chip.min-height → size.control-sm` | The component's own CSS |
 
 The rule that makes theming work: **app code uses semantic and component tokens, never core ones.** Dark mode only swaps which core value each semantic token points to. A component never needs to know which theme is active.
@@ -59,7 +93,7 @@ Open `dist/preview.html` in a browser to see every token. The button in the corn
 
 - Tokens are dotted paths: `color.text.secondary`, `space.4`, `font.size.body`.
 - In CSS they become `--mf-` + the path with dashes: `--mf-color-text-secondary`, `--mf-space-4`.
-- Semantic colour names say **role**, not appearance: `accent.default`, not `blue`. If the brand blue changes, no name changes.
+- Semantic colour names say **role**, not appearance: `accent.default`, not `terracotta`. If the primary colour changes, no name changes.
 - Spacing keys are multiples of 4px: `space.4` is 16px.
 
 ## What is and is not covered today
@@ -69,7 +103,7 @@ Covered: colour (light + dark), spacing, radius, font family / size / weight / w
 Not covered yet, listed so nothing is a surprise:
 
 - **Off-grid spacing** in `web/src/index.css` (2, 3, 6, 7, 10 and 14px) is still written as raw numbers. They are small optical adjustments; decide later whether to snap them to the grid.
-- **The error red in light mode** (`#E2463B` on the light page) is 3.75:1, below the 4.5:1 WCAG AA minimum for text. Logged in `scripts/contrast.mjs`; fixing it changes the look, so it needs your decision.
-- **Icons and the app icon** (`web/public/icon.svg`, PNG icons) still contain their own hex colours.
+- **Demo mode header on phones:** with the "Modo prueba" badge, the DE/ES switch is cut off on screens narrower than about 425px. The real app (no badge) fits. This was the same before v1.1.
+- **The installed app keeps its old icon** on a phone until the app is removed and added to the home screen again; browsers cache home-screen icons.
 - **The breakpoint** (760px) cannot be a CSS variable inside `@media`. It is a token for TypeScript and docs, and mirrored by hand in `index.css`.
 - **No theme switch in the UI yet.** The app follows the phone or computer setting. The tokens already support forcing a theme with `data-theme="dark"` or `"light"` on `<html>`.

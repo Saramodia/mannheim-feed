@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { Icon } from './Icon'
+import { icons } from '../lib/icons'
 
 // Campo para escribir palabras sueltas y convertirlas en etiquetas.
 export function TagInput({ id, values, onChange, placeholder }: {
@@ -24,7 +26,7 @@ export function TagInput({ id, values, onChange, placeholder }: {
           {values.map((v) => (
             <li key={v}>
               <button className="chip chip-removable" onClick={() => onChange(values.filter((x) => x !== v))} aria-label={`Quitar ${v}`}>
-                {v} <span aria-hidden="true">×</span>
+                {v} <Icon path={icons.remove} size={16} />
               </button>
             </li>
           ))}

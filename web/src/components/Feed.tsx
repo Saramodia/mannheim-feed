@@ -3,6 +3,8 @@ import taxonomy from '../taxonomy.json'
 import { forYou, rank } from '../lib/rank'
 import type { Article, Lang, Profile } from '../lib/types'
 import { ArticleItem } from './ArticleItem'
+import { Icon } from './Icon'
+import { topicIcon } from '../lib/icons'
 
 type Props = {
   articles: Article[]
@@ -41,7 +43,7 @@ export function Feed({ articles, profile, lang, loading, error, onRetry, onOpenP
         <button className="chip" aria-pressed={topic === null} onClick={() => setTopic(null)}>Todos los temas</button>
         {taxonomy.topics.map((t) => (
           <button key={t.id} className="chip" aria-pressed={topic === t.id} onClick={() => setTopic(topic === t.id ? null : t.id)}>
-            <span aria-hidden="true">{t.emoji}</span> {t.label}
+            {topicIcon(t.id) && <Icon path={topicIcon(t.id)!} size={16} />} {t.label}
           </button>
         ))}
       </div>

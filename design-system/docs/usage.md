@@ -63,7 +63,8 @@ The semantic names (`color.text.primary`, `space.4`) stay the same on every plat
 
 | I want to… | Do this |
 |---|---|
-| Change the brand blue | Edit `color.blue.600` in `tokens/core/color.json`, then `npm run verify` |
+| Change the primary colour | Edit `color.ember.600` (daylight) or `color.sun.400` (golden hour) in `tokens/core/color.json`, then `npm run verify`; then `npm run icons` in `web/` for the app icon |
+| Add an icon | See README → Icons |
 | Add a new colour role | Add it to **both** `semantic/light.json` and `semantic/dark.json` (same name) |
 | Add a spacing step | Add it to `space` in `tokens/core/scales.json`, in multiples of 4px |
 | See all tokens | Open `dist/preview.html` |

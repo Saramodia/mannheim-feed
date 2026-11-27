@@ -1,34 +1,41 @@
 {
   "color": {
     "$type": "color",
-    "$description": "Core palette. Raw values only. Never use these directly in components: use the semantic tokens in tokens/semantic/.",
-    "neutral": {
-      "0":    { "$value": "#FFFFFF" },
-      "50":   { "$value": "#F4F6FA" },
-      "100":  { "$value": "#E9ECF2" },
-      "200":  { "$value": "#DFE3EB" },
-      "400":  { "$value": "#9AA3B5" },
-      "600":  { "$value": "#5B6475" },
-      "700":  { "$value": "#2A303C" },
-      "800":  { "$value": "#181C25" },
-      "900":  { "$value": "#161B26" },
-      "950":  { "$value": "#10131A" },
-      "1000": { "$value": "#0D1220" }
+    "$description": "Core palette (v2): daylight and golden hour. Light mode is daylight: warm cream paper and espresso ink. Dark mode is golden hour: dusk browns lit by low amber sun. No blue. Raw values only: components use the semantic tokens in tokens/semantic/.",
+    "sand": {
+      "$description": "Warm neutrals, from midday light (0) to dusk (950).",
+      "0":   { "$value": "#FFFFFF", "$description": "Pure white. Only for small details such as the switch knob." },
+      "25":  { "$value": "#FFFDF8", "$description": "Daylight paper: cards, inputs, tab bar." },
+      "50":  { "$value": "#FDFBF6", "$description": "Daylight cream: page background." },
+      "100": { "$value": "#ECE1CF", "$description": "Warm candle-light text (golden hour)." },
+      "200": { "$value": "#E8E0D2", "$description": "Sand: daylight dividers and outlines." },
+      "400": { "$value": "#BCAB95", "$description": "Dry grass: secondary text at golden hour." },
+      "600": { "$value": "#6C5D4F", "$description": "Driftwood: secondary text in daylight." },
+      "700": { "$value": "#483C30", "$description": "Dusk dividers." },
+      "800": { "$value": "#33291F", "$description": "Espresso ink: body text in daylight." },
+      "900": { "$value": "#2F2820", "$description": "Dusk surface: cards at golden hour." },
+      "950": { "$value": "#262019", "$description": "Dusk sky: page at golden hour." }
     },
-    "blue": {
-      "50":  { "$value": "#E3EAFC" },
-      "300": { "$value": "#7FA0FF" },
-      "600": { "$value": "#1E4BD2", "$description": "Brand blue (\"Quadrat\")." },
-      "900": { "$value": "#1E2A4A" }
+    "sun": {
+      "$description": "Golden light.",
+      "100": { "$value": "#F6EAD8", "$description": "Honey wash: tinted backgrounds in daylight." },
+      "400": { "$value": "#E3AE6A", "$description": "Low amber sun: primary colour at golden hour." },
+      "500": { "$value": "#E0A24A", "$description": "Sun gold: logo and app icon." },
+      "900": { "$value": "#473522", "$description": "Amber shadow: tinted backgrounds at golden hour." }
     },
-    "red": {
-      "300": { "$value": "#FF7A70" },
-      "400": { "$value": "#FF5A4E", "$description": "Brand coral: the centre square of the app icon." },
-      "500": { "$value": "#E2463B" }
+    "ember": {
+      "$description": "Terracotta: sun on brick and clay.",
+      "600": { "$value": "#9A4B2A", "$description": "Terracotta: primary colour in daylight, app icon background." }
     },
-    "black-alpha": {
-      "8":  { "$value": "#00000014" },
-      "25": { "$value": "#00000040" }
+    "rose": {
+      "$description": "Evening rose. Errors only, kept apart from the terracotta by hue.",
+      "300": { "$value": "#E992A5", "$description": "Errors at golden hour." },
+      "700": { "$value": "#9C2C4F", "$description": "Errors in daylight." }
+    },
+    "dusk-alpha": {
+      "$description": "Warm, translucent shadow colour (dusk brown, not black).",
+      "6":  { "$value": "#1D18130F" },
+      "20": { "$value": "#1D181333" }
     }
   }
 }

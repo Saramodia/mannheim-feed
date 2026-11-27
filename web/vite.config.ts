@@ -45,7 +45,8 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png}'],
+        // woff2 = la fuente Inconsolata, para que la app instalada la tenga también sin conexión
+        globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
         // Las noticias se piden siempre frescas a internet; si no hay conexión, se usa la última copia.
         runtimeCaching: [
           { urlPattern: /demo-articles\.json$/, handler: 'NetworkFirst' },

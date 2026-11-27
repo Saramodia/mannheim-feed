@@ -1,33 +1,39 @@
 {
   "color": {
     "$type": "color",
+    "$description": "Dark theme = GOLDEN HOUR.",
     "bg": {
-      "page":    { "$value": "{color.neutral.950}" },
-      "surface": { "$value": "{color.neutral.800}" }
+      "page":    { "$value": "{color.sand.950}" },
+      "surface": { "$value": "{color.sand.900}" }
     },
     "text": {
-      "primary":   { "$value": "{color.neutral.100}" },
-      "secondary": { "$value": "{color.neutral.400}" },
-      "on-accent": { "$value": "{color.neutral.1000}" }
+      "primary":   { "$value": "{color.sand.100}" },
+      "secondary": { "$value": "{color.sand.400}" },
+      "on-accent": { "$value": "{color.sand.950}" }
     },
     "border": {
-      "default": { "$value": "{color.neutral.700}" }
+      "default": { "$value": "{color.sand.700}" }
     },
     "accent": {
-      "default": { "$value": "{color.blue.300}" },
-      "soft":    { "$value": "{color.blue.900}" }
+      "default": { "$value": "{color.sun.400}" },
+      "soft":    { "$value": "{color.sun.900}" }
     },
     "feedback": {
-      "danger": { "$value": "{color.red.300}" }
+      "danger": { "$value": "{color.rose.300}" }
     },
     "focus": {
-      "ring": { "$value": "{color.blue.300}" }
+      "ring": { "$value": "{color.sun.400}" }
+    },
+    "icon": {
+      "default": { "$value": "{color.sand.400}" },
+      "active":  { "$value": "{color.sun.400}" }
     },
     "brand": {
-      "accent-mark": { "$value": "{color.red.400}" }
+      "accent-mark": { "$value": "{color.sun.500}" },
+      "mark-bg":     { "$value": "{color.ember.600}" }
     },
     "control": {
-      "knob": { "$value": "{color.neutral.0}" }
+      "knob": { "$value": "{color.sand.0}" }
     }
   }
 }

@@ -16,27 +16,32 @@
   },
   "radius": {
     "$type": "dimension",
-    "xs":     { "$value": "6px" },
-    "sm":     { "$value": "8px" },
-    "md":     { "$value": "10px" },
-    "lg":     { "$value": "12px" },
-    "xl":     { "$value": "16px" },
-    "pill":   { "$value": "99px" },
-    "circle": { "$value": "50%" }
+    "$description": "Subtle corners only (v2): nothing rounder than 8px, no pill or circle shapes.",
+    "xs":     { "$value": "2px", "$description": "Focus ring, switch knob, tiny details." },
+    "sm":     { "$value": "3px", "$description": "Badges and labels, the logo in the header." },
+    "md":     { "$value": "4px", "$description": "Buttons, inputs, chips, tabs, switch, thumbnails." },
+    "lg":     { "$value": "6px" },
+    "xl":     { "$value": "8px", "$description": "Largest corner: the logo on the login screen." }
   },
   "font": {
     "family": {
       "$type": "fontFamily",
-      "sans": { "$value": "'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif", "$description": "Archivo is a variable font with weight and width axes. System fonts are the fallback." }
+      "mono": { "$value": "'Inconsolata Variable', 'Inconsolata', ui-monospace, 'SF Mono', Menlo, Consolas, monospace", "$description": "Inconsolata (SIL Open Font License), a variable font with weight (200-900) and width (50-200%) axes. Bundled with the app from the @fontsource-variable/inconsolata package, so it works offline and is not loaded from Google. System monospace fonts are the fallback." }
+    },
+    "size-adjust": {
+      "$type": "number",
+      "$value": 0.5,
+      "$description": "CSS font-size-adjust: scales the font so its lowercase letters are half the font size. Inconsolata's lowercase is only 0.46, so this makes it about 9% larger and as legible as a typical sans-serif at the same font size. Also keeps fallback fonts the same visual size. Change it if the font changes."
     },
     "size": {
       "$type": "dimension",
-      "caption":  { "$value": "0.75rem", "$description": "12px. Badges, small labels." },
-      "small":    { "$value": "0.8rem",  "$description": "12.8px. Meta lines, hints." },
-      "body-sm":  { "$value": "0.9rem",  "$description": "14.4px. Summaries, chips." },
-      "body":     { "$value": "1rem",    "$description": "16px. Default text." },
-      "title":    { "$value": "1.1rem",  "$description": "17.6px. Article titles, group titles." },
-      "headline": { "$value": "1.6rem",  "$description": "25.6px. Page headings." }
+      "$description": "Readability floor since v1.1: nothing below 13px, running text at 15px or more.",
+      "caption":  { "$value": "0.8125rem", "$description": "13px. Badges, tab labels." },
+      "small":    { "$value": "0.875rem",  "$description": "14px. Meta lines, hints." },
+      "body-sm":  { "$value": "0.9375rem", "$description": "15px. Summaries, chips." },
+      "body":     { "$value": "1rem",      "$description": "16px. Default text." },
+      "title":    { "$value": "1.125rem",  "$description": "18px. Article titles, group titles." },
+      "headline": { "$value": "1.625rem",  "$description": "26px. Page headings." }
     },
     "weight": {
       "$type": "fontWeight",
@@ -49,15 +54,15 @@
     "stretch": {
       "$type": "number",
       "$description": "Archivo width axis, in percent (font-stretch).",
-      "condensed": { "$value": 92 },
+      "condensed": { "$value": 96, "$description": "Article titles. Was 92 in v1.0; slightly wider letters read more easily." },
       "normal":    { "$value": 100 },
       "expanded":  { "$value": 110 },
       "wide":      { "$value": 115 }
     },
     "line-height": {
       "$type": "number",
-      "tight": { "$value": 1.3 },
-      "base":  { "$value": 1.5 }
+      "tight": { "$value": 1.35, "$description": "Headings and article titles." },
+      "base":  { "$value": 1.6,  "$description": "Running text. More air between lines for easier reading." }
     },
     "letter-spacing": {
       "$type": "dimension",
@@ -72,8 +77,9 @@
     "tap-target":   { "$value": "44px", "$description": "Minimum touch target (Apple HIG 44pt, WCAG 2.5.5)." },
     "control-sm":   { "$value": "36px" },
     "control-xs":   { "$value": "32px" },
-    "icon-sm":      { "$value": "18px" },
-    "icon-md":      { "$value": "24px" },
+    "icon-xs":      { "$value": "16px", "$description": "Icons inside a line of text: link arrow, chip icons, remove buttons." },
+    "icon-sm":      { "$value": "18px", "$description": "Tab icons on wide screens." },
+    "icon-md":      { "$value": "24px", "$description": "Tab icons on phones. Pictogrammers icons are drawn on a 24px grid." },
     "thumb-width":  { "$value": "88px" },
     "thumb-height": { "$value": "88px" },
     "content-max":  { "$value": "680px", "$description": "Maximum width of the reading column." },
@@ -87,22 +93,22 @@
   "shadow": {
     "$type": "shadow",
     "raised": {
-      "$value": { "color": "{color.black-alpha.8}", "offsetX": "0px", "offsetY": "1px", "blur": "2px", "spread": "0px" },
+      "$value": { "color": "{color.dusk-alpha.6}", "offsetX": "0px", "offsetY": "1px", "blur": "3px", "spread": "0px" },
       "$description": "Selected segment."
     },
     "knob": {
-      "$value": { "color": "{color.black-alpha.25}", "offsetX": "0px", "offsetY": "1px", "blur": "2px", "spread": "0px" },
+      "$value": { "color": "{color.dusk-alpha.20}", "offsetX": "0px", "offsetY": "1px", "blur": "3px", "spread": "0px" },
       "$description": "Switch knob."
     }
   },
   "motion": {
     "duration": {
       "$type": "duration",
-      "fast": { "$value": "150ms" }
+      "fast": { "$value": "200ms" }
     },
     "easing": {
       "$type": "cubicBezier",
-      "standard": { "$value": [0.25, 0.1, 0.25, 1] }
+      "standard": { "$value": [0.2, 0, 0, 1], "$description": "Smooth ease-out: quick start, gentle stop." }
     }
   },
   "z": {

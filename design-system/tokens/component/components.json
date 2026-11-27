@@ -14,7 +14,7 @@
   },
   "chip": {
     "min-height":   { "$type": "dimension", "$value": "{size.control-sm}" },
-    "radius":       { "$type": "dimension", "$value": "{radius.pill}" },
+    "radius":       { "$type": "dimension", "$value": "{radius.md}" },
     "padding-x":    { "$type": "dimension", "$value": "14px" },
     "padding-y":    { "$type": "dimension", "$value": "6px" },
     "gap":          { "$type": "dimension", "$value": "6px" }
@@ -28,7 +28,7 @@
   },
   "article": {
     "title-size":   { "$type": "dimension", "$value": "{font.size.title}" },
-    "padding-y":    { "$type": "dimension", "$value": "{space.4}" },
+    "padding-y":    { "$type": "dimension", "$value": "{space.5}" },
     "gap":          { "$type": "dimension", "$value": "14px" }
   }
 }
