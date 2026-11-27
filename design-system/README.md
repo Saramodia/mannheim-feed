@@ -23,6 +23,15 @@ design-system/
 └── package.json            the design system's own version number lives here
 ```
 
+## Design principles
+
+**Soft, calm and easy to read.** These rules are enforced by `npm run check`, not just written down.
+
+- **Calm colour.** Muted, low-saturation blue for the UI; the bright brand blue and coral are only for the logo and app icon.
+- **No glare.** Off-white surfaces and charcoal text instead of pure white and black. Body text contrast must stay between 7:1 (WCAG AAA) and 14:1.
+- **Readable text.** Nothing smaller than 13px; running text at 15–16px with 1.6 line spacing; lines no longer than about 60 characters.
+- **Smooth shapes and motion.** Rounded corners, light shadows, 200ms ease-out transitions (switched off when the phone asks for reduced motion).
+
 ## The three layers
 
 | Layer | Question it answers | Example | Who may use it |
@@ -69,7 +78,7 @@ Covered: colour (light + dark), spacing, radius, font family / size / weight / w
 Not covered yet, listed so nothing is a surprise:
 
 - **Off-grid spacing** in `web/src/index.css` (2, 3, 6, 7, 10 and 14px) is still written as raw numbers. They are small optical adjustments; decide later whether to snap them to the grid.
-- **The error red in light mode** (`#E2463B` on the light page) is 3.75:1, below the 4.5:1 WCAG AA minimum for text. Logged in `scripts/contrast.mjs`; fixing it changes the look, so it needs your decision.
+- **Demo mode header on phones:** with the "Modo prueba" badge, the DE/ES switch is cut off on screens narrower than about 425px. The real app (no badge) fits. This was the same before v1.1.
 - **Icons and the app icon** (`web/public/icon.svg`, PNG icons) still contain their own hex colours.
 - **The breakpoint** (760px) cannot be a CSS variable inside `@media`. It is a token for TypeScript and docs, and mirrored by hand in `index.css`.
 - **No theme switch in the UI yet.** The app follows the phone or computer setting. The tokens already support forcing a theme with `data-theme="dark"` or `"light"` on `<html>`.

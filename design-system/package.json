@@ -1,6 +1,6 @@
 {
   "name": "@mannheim-feed/design-system",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Design tokens and guidelines for Mannheim Feed (browser and installed PWA).",
   "private": true,
   "type": "module",

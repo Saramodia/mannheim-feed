@@ -28,7 +28,7 @@
   },
   "article": {
     "title-size":   { "$type": "dimension", "$value": "{font.size.title}" },
-    "padding-y":    { "$type": "dimension", "$value": "{space.4}" },
+    "padding-y":    { "$type": "dimension", "$value": "{space.5}" },
     "gap":          { "$type": "dimension", "$value": "14px" }
   }
 }

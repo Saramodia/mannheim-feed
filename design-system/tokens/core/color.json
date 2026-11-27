@@ -1,34 +1,36 @@
 {
   "color": {
     "$type": "color",
-    "$description": "Core palette. Raw values only. Never use these directly in components: use the semantic tokens in tokens/semantic/.",
+    "$description": "Core palette. Raw values only. Never use these directly in components: use the semantic tokens in tokens/semantic/. v1.1 softened every colour: lower saturation, off-white surfaces and soft charcoal text instead of pure white and near-black.",
     "neutral": {
-      "0":    { "$value": "#FFFFFF" },
-      "50":   { "$value": "#F4F6FA" },
-      "100":  { "$value": "#E9ECF2" },
-      "200":  { "$value": "#DFE3EB" },
-      "400":  { "$value": "#9AA3B5" },
-      "600":  { "$value": "#5B6475" },
-      "700":  { "$value": "#2A303C" },
-      "800":  { "$value": "#181C25" },
-      "900":  { "$value": "#161B26" },
-      "950":  { "$value": "#10131A" },
-      "1000": { "$value": "#0D1220" }
+      "0":    { "$value": "#FFFFFF", "$description": "Pure white. Only for small details such as the switch knob." },
+      "25":   { "$value": "#FBFBFA", "$description": "Soft white: cards, inputs, tab bar." },
+      "50":   { "$value": "#F5F5F3", "$description": "Warm paper: page background." },
+      "100":  { "$value": "#D6DAE3" },
+      "200":  { "$value": "#DCDEE3" },
+      "400":  { "$value": "#9BA3B4" },
+      "600":  { "$value": "#596176" },
+      "700":  { "$value": "#303642" },
+      "800":  { "$value": "#1E222B" },
+      "900":  { "$value": "#2A3040", "$description": "Soft charcoal-blue: body text in light mode." },
+      "950":  { "$value": "#171A21" },
+      "1000": { "$value": "#14171E" }
     },
     "blue": {
-      "50":  { "$value": "#E3EAFC" },
-      "300": { "$value": "#7FA0FF" },
-      "600": { "$value": "#1E4BD2", "$description": "Brand blue (\"Quadrat\")." },
-      "900": { "$value": "#1E2A4A" }
+      "50":  { "$value": "#E5EAF4" },
+      "300": { "$value": "#8DA6E0" },
+      "500": { "$value": "#3D5CA8", "$description": "Calm UI blue (light mode accent)." },
+      "600": { "$value": "#1E4BD2", "$description": "Brand blue (\"Quadrat\"). Logo and app icon only, too intense for UI." },
+      "900": { "$value": "#25304A" }
     },
     "red": {
-      "300": { "$value": "#FF7A70" },
-      "400": { "$value": "#FF5A4E", "$description": "Brand coral: the centre square of the app icon." },
-      "500": { "$value": "#E2463B" }
+      "300": { "$value": "#DE8880" },
+      "400": { "$value": "#FF5A4E", "$description": "Brand coral: the centre square of the app icon. Not for UI." },
+      "500": { "$value": "#B2453D", "$description": "Muted brick red: errors in light mode." }
     },
     "black-alpha": {
-      "8":  { "$value": "#00000014" },
-      "25": { "$value": "#00000040" }
+      "6":  { "$value": "#0000000F" },
+      "20": { "$value": "#00000033" }
     }
   }
 }
