@@ -1,5 +1,7 @@
 import { timeAgo, type Ranked } from '../lib/rank'
 import type { Lang } from '../lib/types'
+import { Icon } from './Icon'
+import { icons } from '../lib/icons'
 
 // Dirección de la fuente original, sin "www.". Las noticias de Google News pasan por su propio enlace.
 function sourceHost(link: string) {
@@ -30,7 +32,7 @@ export function ArticleItem({ a, lang, showReasons }: { a: Ranked; lang: Lang; s
           <h2 className="article-title" lang={esTitle ? 'es' : 'de'}>{esTitle ? a.title_es : a.title}</h2>
           {summary && <p className="article-summary" lang={esText ? 'es' : 'de'}>{summary}</p>}
           <p className="article-origin">
-            Leer en <strong>{sourceHost(a.link) || a.source_label}</strong> ↗
+            Leer en <strong>{sourceHost(a.link) || a.source_label}</strong> <Icon path={icons.externalLink} size={16} />
           </p>
           {showReasons && a.reasons.length > 0 && (
             <p className="article-reasons">Porque sigues {a.reasons.join(', ')}</p>

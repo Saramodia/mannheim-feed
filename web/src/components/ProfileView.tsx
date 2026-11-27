@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react'
 import taxonomy from '../taxonomy.json'
 import type { Article, Profile } from '../lib/types'
 import { TagInput } from './TagInput'
+import { Icon } from './Icon'
+import { topicIcon } from '../lib/icons'
 
 type Props = {
   profile: Profile
@@ -58,7 +60,7 @@ export function ProfileView({ profile, onChange, articles, saveState, email, onS
           {taxonomy.topics.map((t) => (
             <button key={t.id} className="chip" aria-pressed={profile.topics.includes(t.id)}
               onClick={() => set({ topics: toggle(profile.topics, t.id) })}>
-              <span aria-hidden="true">{t.emoji}</span> {t.label}
+              {topicIcon(t.id) && <Icon path={topicIcon(t.id)!} size={16} />} {t.label}
             </button>
           ))}
         </div>

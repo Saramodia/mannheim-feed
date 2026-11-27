@@ -34,7 +34,12 @@ const PAIRS = [
   ['color.feedback.danger', 'color.bg.page', 4.5, 'error text'],
   ['color.feedback.danger', 'color.bg.surface', 4.5, 'error text on a card'],
   ['color.focus.ring', 'color.bg.page', 3, 'keyboard focus ring'],
-  ['color.accent.default', 'color.bg.surface', 3, 'switch on, active tab icon']
+  ['color.accent.default', 'color.bg.surface', 3, 'switch on'],
+  // Icons are graphics, so WCAG asks for 3:1 (non-text contrast).
+  ['color.icon.default', 'color.bg.surface', 3, 'tab icons, chip icons'],
+  ['color.icon.default', 'color.bg.page', 3, 'link arrow on the page'],
+  ['color.icon.active', 'color.bg.surface', 3, 'selected tab icon'],
+  ['color.text.on-accent', 'color.accent.default', 3, 'icon on a selected chip']
 ]
 
 // Pairs that fall short today. Fixing the colour is a visual change, so it needs a decision.

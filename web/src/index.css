@@ -8,11 +8,14 @@
 html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0; background: var(--mf-color-bg-page); color: var(--mf-color-text-primary);
-  font-family: var(--mf-font-family-sans); font-size: var(--mf-font-size-body); line-height: var(--mf-font-line-height-base);
+  font-family: var(--mf-font-family-mono); font-size-adjust: var(--mf-font-size-adjust); font-size: var(--mf-font-size-body); line-height: var(--mf-font-line-height-base);
   -webkit-font-smoothing: antialiased;
 }
 button, input { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--mf-color-accent-default); outline-offset: 2px; border-radius: var(--mf-radius-xs); }
+/* Iconos de Pictogrammers: formas rellenas de un solo color (el del texto). */
+.icon { flex: none; fill: currentColor; vertical-align: -0.2em; }
+.chip .icon, .article-origin .icon { width: var(--mf-size-icon-xs); height: var(--mf-size-icon-xs); }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 
 /* ============ Estructura ============ */
@@ -49,7 +52,7 @@ button, input { font: inherit; color: inherit; }
   display: flex; flex-direction: column; align-items: center; gap: 2px;
   border: 0; background: none; padding: 6px; font-size: var(--mf-font-size-caption); font-weight: var(--mf-font-weight-medium); color: var(--mf-color-text-secondary); cursor: pointer;
 }
-.tabbar svg { width: var(--mf-size-icon-md); height: var(--mf-size-icon-md); fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.tabbar svg { width: var(--mf-size-icon-md); height: var(--mf-size-icon-md); }
 .tabbar button[aria-current="page"] { color: var(--mf-color-accent-default); }
 @media (min-width: 760px) {
   .topbar { padding-right: 250px; }
@@ -116,6 +119,7 @@ button, input { font: inherit; color: inherit; }
 }
 .article-summary {
   margin: 6px 0 0; color: var(--mf-color-text-secondary); font-size: var(--mf-font-size-body-sm);
+  text-wrap: pretty;
 }
 .article-origin { margin: var(--mf-space-2) 0 0; font-size: var(--mf-font-size-small); color: var(--mf-color-text-secondary); }
 .article-origin strong { font-weight: var(--mf-font-weight-semibold); color: var(--mf-color-text-primary); overflow-wrap: anywhere; }
@@ -148,7 +152,7 @@ button, input { font: inherit; color: inherit; }
 }
 .group legend { padding: 0; font-weight: var(--mf-font-weight-bold); font-size: var(--mf-font-size-title); float: left; width: 100%; }
 .group legend + * { clear: both; }
-.hint { display: block; margin: 2px 0 var(--mf-space-3); font-size: var(--mf-font-size-small); color: var(--mf-color-text-secondary); }
+.hint { display: block; margin: 2px 0 var(--mf-space-3); font-size: var(--mf-font-size-small); color: var(--mf-color-text-secondary); text-wrap: pretty; }
 .tag-form { display: flex; gap: var(--mf-space-2); margin-bottom: 10px; }
 .tag-form .input { flex: 1; }
 .switch-row { display: flex; align-items: center; justify-content: space-between; gap: var(--mf-space-4); cursor: pointer; }

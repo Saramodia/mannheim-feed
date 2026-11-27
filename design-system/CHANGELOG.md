@@ -3,6 +3,33 @@
 All notable changes to the Mannheim Feed design system. Newest first.
 Versioning rules: `docs/versioning.md`.
 
+## 2.0.0 · 2026-11-27
+
+New identity: a daylight and golden-hour palette, the Inconsolata typeface and simple single-colour icons. Includes everything from 1.1.0 (readability, softness), which was never released on its own.
+
+### Breaking (renamed or removed tokens)
+- `font.family.sans` → **`font.family.mono`** (CSS `--mf-font-family-mono`).
+- Core colours renamed to the new palette: `color.neutral.*` → `color.sand.*`, `color.blue.*` → `color.sun.*` / `color.ember.*`, `color.red.*` → `color.rose.*`, `color.black-alpha.*` → `color.dusk-alpha.*`. Semantic colour names (`color.accent.default`, `color.text.primary`…) are unchanged.
+
+### Changed: colour
+- **No blue.** Light mode is *daylight*: cream paper `#FAF5EC`, espresso text `#33291F`, terracotta primary `#9A4B2A`. Dark mode is *golden hour*: dusk `#1D1813`, candle-light text `#E9DDC9`, amber primary `#E3AE6A`.
+- Errors use evening rose (`#9C2C4F` / `#E992A5`), a different hue from the terracotta and amber.
+- Shadows use translucent dusk brown instead of black.
+- PWA status bar: terracotta `#9A4B2A`; splash background: cream.
+
+### Changed: type
+- **Inconsolata** (variable, weights 200–900, widths 50–200%), bundled with the app via `@fontsource-variable/inconsolata` and cached for offline use. No more Google Fonts request.
+- New token `font.size-adjust` = 0.5 (CSS `font-size-adjust`): Inconsolata's lowercase is short (0.46), so this enlarges it about 9% to read like a sans-serif at the same size.
+- Hints and summaries avoid single stranded words at the end (`text-wrap: pretty`).
+
+### Added: icons
+- All icons from Pictogrammers (`@mdi/js`), filled, one colour (`currentColor`). They replace the two hand-drawn tab icons, the "↗" and "×" characters, and the 12 colourful topic emojis.
+- Tokens `color.icon.default`, `color.icon.active`, `size.icon-xs` (16px). Icons are included in the contrast check (3:1).
+- New app icon generated from the tokens (`npm run icons` in `web/`): cream Quadrate grid on terracotta, gold sun in the centre.
+
+### Checks
+- 32 colour pairs pass in both themes. Body text: 13.1:1 (daylight) and 13.1:1 (golden hour), inside the 7–14 soft range.
+
 ## 1.1.0 · 2026-11-27
 
 A softer, calmer look with better readability. No token was renamed or removed, so nothing in the app code had to change: the new values flow in through the same `--mf-…` names.

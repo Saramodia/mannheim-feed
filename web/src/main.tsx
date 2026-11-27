@@ -1,5 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+// Inconsolata (pesos 200-900, anchos 50-200%) va dentro de la app: funciona sin conexión y no se pide a Google.
+import '@fontsource-variable/inconsolata/standard.css'
 import './index.css'
 import App from './App'
 

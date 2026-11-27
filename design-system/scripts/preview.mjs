@@ -34,10 +34,10 @@ const html = `<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mannheim Feed design tokens v${esc(data.version)}</title>
 <link rel="stylesheet" href="css/tokens.css">
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inconsolata:wdth,wght@50..200,200..900&display=swap" rel="stylesheet">
 <style>
   body { margin: 0; background: var(--mf-color-bg-page); color: var(--mf-color-text-primary);
-         font: var(--mf-font-size-body)/var(--mf-font-line-height-base) var(--mf-font-family-sans); }
+         font: var(--mf-font-size-body)/var(--mf-font-line-height-base) var(--mf-font-family-mono); font-size-adjust: var(--mf-font-size-adjust); }
   main { max-width: 860px; margin: 0 auto; padding: var(--mf-space-4) var(--mf-space-4) var(--mf-space-12); }
   h1 { font-size: var(--mf-font-size-headline); font-weight: var(--mf-font-weight-heavy); font-stretch: var(--mf-font-stretch-expanded); letter-spacing: var(--mf-font-letter-spacing-tight); margin: var(--mf-space-4) 0 var(--mf-space-1); }
   h2 { font-size: var(--mf-font-size-title); margin: var(--mf-space-10) 0 var(--mf-space-3); padding-top: var(--mf-space-4); border-top: 1px solid var(--mf-color-border-default); }
