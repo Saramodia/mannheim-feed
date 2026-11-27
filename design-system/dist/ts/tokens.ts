@@ -8,22 +8,22 @@ export const tokens = {
   "color": {
     "sand": {
       "0": "#ffffff",
-      "25": "#fffcf6",
-      "50": "#faf5ec",
-      "100": "#e9ddc9",
-      "200": "#e6dccb",
-      "400": "#b6a48d",
+      "25": "#fffdf8",
+      "50": "#fdfbf6",
+      "100": "#ece1cf",
+      "200": "#e8e0d2",
+      "400": "#bcab95",
       "600": "#6c5d4f",
-      "700": "#3f342a",
+      "700": "#483c30",
       "800": "#33291f",
-      "900": "#272019",
-      "950": "#1d1813"
+      "900": "#2f2820",
+      "950": "#262019"
     },
     "sun": {
-      "100": "#f4e5d0",
+      "100": "#f6ead8",
       "400": "#e3ae6a",
       "500": "#e0a24a",
-      "900": "#3f2f1e"
+      "900": "#473522"
     },
     "ember": {
       "600": "#9a4b2a"
@@ -51,13 +51,11 @@ export const tokens = {
     "24": "96px"
   },
   "radius": {
-    "xs": "6px",
-    "sm": "8px",
-    "md": "12px",
-    "lg": "14px",
-    "xl": "20px",
-    "pill": "99px",
-    "circle": "50%"
+    "xs": "2px",
+    "sm": "3px",
+    "md": "4px",
+    "lg": "6px",
+    "xl": "8px"
   },
   "font": {
     "family": {
@@ -128,20 +126,20 @@ export const tokens = {
   },
   "button": {
     "min-height": "44px",
-    "radius": "12px",
+    "radius": "4px",
     "padding-x": "18px",
     "padding-y": "8px",
     "font-weight": 600
   },
   "input": {
     "min-height": "44px",
-    "radius": "12px",
+    "radius": "4px",
     "padding-x": "12px",
     "padding-y": "8px"
   },
   "chip": {
     "min-height": "36px",
-    "radius": "99px",
+    "radius": "4px",
     "padding-x": "14px",
     "padding-y": "6px",
     "gap": "6px"
@@ -164,20 +162,20 @@ export const tokens = {
 export const themes = {
   light: {
     "bg": {
-      "page": "#faf5ec",
-      "surface": "#fffcf6"
+      "page": "#fdfbf6",
+      "surface": "#fffdf8"
     },
     "text": {
       "primary": "#33291f",
       "secondary": "#6c5d4f",
-      "on-accent": "#fffcf6"
+      "on-accent": "#fffdf8"
     },
     "border": {
-      "default": "#e6dccb"
+      "default": "#e8e0d2"
     },
     "accent": {
       "default": "#9a4b2a",
-      "soft": "#f4e5d0"
+      "soft": "#f6ead8"
     },
     "feedback": {
       "danger": "#9c2c4f"
@@ -199,20 +197,20 @@ export const themes = {
   },
   dark: {
     "bg": {
-      "page": "#1d1813",
-      "surface": "#272019"
+      "page": "#262019",
+      "surface": "#2f2820"
     },
     "text": {
-      "primary": "#e9ddc9",
-      "secondary": "#b6a48d",
-      "on-accent": "#1d1813"
+      "primary": "#ece1cf",
+      "secondary": "#bcab95",
+      "on-accent": "#262019"
     },
     "border": {
-      "default": "#3f342a"
+      "default": "#483c30"
     },
     "accent": {
       "default": "#e3ae6a",
-      "soft": "#3f2f1e"
+      "soft": "#473522"
     },
     "feedback": {
       "danger": "#e992a5"
@@ -221,7 +219,7 @@ export const themes = {
       "ring": "#e3ae6a"
     },
     "icon": {
-      "default": "#b6a48d",
+      "default": "#bcab95",
       "active": "#e3ae6a"
     },
     "brand": {

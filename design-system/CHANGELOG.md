@@ -9,13 +9,18 @@ New identity: a daylight and golden-hour palette, the Inconsolata typeface and s
 
 ### Breaking (renamed or removed tokens)
 - `font.family.sans` → **`font.family.mono`** (CSS `--mf-font-family-mono`).
+- `radius.pill` and `radius.circle` removed (no round shapes in v2).
 - Core colours renamed to the new palette: `color.neutral.*` → `color.sand.*`, `color.blue.*` → `color.sun.*` / `color.ember.*`, `color.red.*` → `color.rose.*`, `color.black-alpha.*` → `color.dusk-alpha.*`. Semantic colour names (`color.accent.default`, `color.text.primary`…) are unchanged.
 
 ### Changed: colour
-- **No blue.** Light mode is *daylight*: cream paper `#FAF5EC`, espresso text `#33291F`, terracotta primary `#9A4B2A`. Dark mode is *golden hour*: dusk `#1D1813`, candle-light text `#E9DDC9`, amber primary `#E3AE6A`.
+- **No blue.** Light mode is *daylight*: light cream page `#FDFBF6`, near-white cards `#FFFDF8`, espresso text `#33291F`, terracotta primary `#9A4B2A`. Dark mode is *golden hour*: dusk `#262019`, cards `#2F2820`, candle-light text `#ECE1CF`, amber primary `#E3AE6A`.
+- **Lighter backgrounds** in both modes for readability: daylight body text rises to 13.7:1, still under the 14:1 glare ceiling.
 - Errors use evening rose (`#9C2C4F` / `#E992A5`), a different hue from the terracotta and amber.
 - Shadows use translucent dusk brown instead of black.
 - PWA status bar: terracotta `#9A4B2A`; splash background: cream.
+
+### Changed: shape
+- **Subtle corners only.** Radius scale is now 2 / 3 / 4 / 6 / 8px (was up to 20px). The `radius.pill` and `radius.circle` tokens are **removed**: chips, tabs, the language switch, badges and the toggle switch now have 3–4px corners. The app icon's corners are flatter too.
 
 ### Changed: type
 - **Inconsolata** (variable, weights 200–900, widths 50–200%), bundled with the app via `@fontsource-variable/inconsolata` and cached for offline use. No more Google Fonts request.
@@ -28,7 +33,7 @@ New identity: a daylight and golden-hour palette, the Inconsolata typeface and s
 - New app icon generated from the tokens (`npm run icons` in `web/`): cream Quadrate grid on terracotta, gold sun in the centre.
 
 ### Checks
-- 32 colour pairs pass in both themes. Body text: 13.1:1 (daylight) and 13.1:1 (golden hour), inside the 7–14 soft range.
+- 32 colour pairs pass in both themes. Body text: 13.7:1 (daylight) and 12.5:1 (golden hour), inside the 7–14 soft range.
 
 ## 1.1.0 · 2026-11-27
 

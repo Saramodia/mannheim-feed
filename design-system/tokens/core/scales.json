@@ -16,13 +16,12 @@
   },
   "radius": {
     "$type": "dimension",
-    "xs":     { "$value": "6px" },
-    "sm":     { "$value": "8px" },
-    "md":     { "$value": "12px", "$description": "Buttons, inputs, thumbnails. Softer corners since v1.1." },
-    "lg":     { "$value": "14px" },
-    "xl":     { "$value": "20px" },
-    "pill":   { "$value": "99px" },
-    "circle": { "$value": "50%" }
+    "$description": "Subtle corners only (v2): nothing rounder than 8px, no pill or circle shapes.",
+    "xs":     { "$value": "2px", "$description": "Focus ring, switch knob, tiny details." },
+    "sm":     { "$value": "3px", "$description": "Badges and labels, the logo in the header." },
+    "md":     { "$value": "4px", "$description": "Buttons, inputs, chips, tabs, switch, thumbnails." },
+    "lg":     { "$value": "6px" },
+    "xl":     { "$value": "8px", "$description": "Largest corner: the logo on the login screen." }
   },
   "font": {
     "family": {

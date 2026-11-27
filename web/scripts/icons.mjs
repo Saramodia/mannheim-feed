@@ -27,10 +27,10 @@ function svg({ scale, rounded }) {
     for (let c = 0; c < 3; c++) {
       const x = start + c * (cell + gap) * k, y = start + r * (cell + gap) * k
       const fill = r === 1 && c === 1 ? sun : square
-      squares.push(`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(cell * k).toFixed(1)}" height="${(cell * k).toFixed(1)}" rx="${(10 * k).toFixed(1)}" fill="${fill}"/>`)
+      squares.push(`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(cell * k).toFixed(1)}" height="${(cell * k).toFixed(1)}" rx="${(4 * k).toFixed(1)}" fill="${fill}"/>`)
     }
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}">
-  <rect width="${size}" height="${size}"${rounded ? ' rx="112"' : ''} fill="${bg}"/>
+  <rect width="${size}" height="${size}"${rounded ? ' rx="48"' : ''} fill="${bg}"/>
   ${squares.join('\n  ')}
 </svg>
 `

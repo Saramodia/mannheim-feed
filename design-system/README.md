@@ -27,13 +27,13 @@ design-system/
 
 **Daylight and golden hour; soft, calm and easy to read.** The colour rules are enforced by `npm run check`, not just written down.
 
-- **Daylight and golden hour.** Light mode is *daylight*: warm cream paper, espresso ink, terracotta as the primary colour. Dark mode is *golden hour*: dusk browns lit by a low amber sun. No blue anywhere.
+- **Daylight and golden hour.** Light mode is *daylight*: light, warm cream paper, espresso ink, terracotta as the primary colour. Dark mode is *golden hour*: dusk browns lit by a low amber sun. No blue anywhere.
 - **Calm colour.** Warm but muted (no neon orange). Error rose is kept apart from the terracotta by hue, so an error never looks like a button.
 - **No glare.** Off-white surfaces and charcoal text instead of pure white and black. Body text contrast must stay between 7:1 (WCAG AAA) and 14:1.
 - **Readable text.** Nothing smaller than 13px; running text at 15–16px with 1.6 line spacing; lines no longer than about 60 characters.
 - **One typeface: Inconsolata.** A monospace font, bundled with the app (works offline, never loaded from Google). `font-size-adjust: 0.5` makes up for its short lowercase letters, so it reads as large as a sans-serif.
 - **Simple, single-colour icons** from Pictogrammers. See [Icons](#icons).
-- **Smooth shapes and motion.** Rounded corners, light shadows, 200ms ease-out transitions (switched off when the phone asks for reduced motion).
+- **Crisp shapes, smooth motion.** Subtle corners only (2–8px, no pill or round shapes), light shadows, 200ms ease-out transitions (switched off when the phone asks for reduced motion).
 
 ## Icons
 

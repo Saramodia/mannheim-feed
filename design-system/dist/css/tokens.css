@@ -4,20 +4,20 @@
  */
 :root {
   --mf-color-sand-0: #ffffff; /** Pure white. Only for small details such as the switch knob. */
-  --mf-color-sand-25: #fffcf6; /** Daylight paper: cards, inputs, tab bar. */
-  --mf-color-sand-50: #faf5ec; /** Daylight cream: page background. */
-  --mf-color-sand-100: #e9ddc9; /** Warm candle-light text (golden hour). */
-  --mf-color-sand-200: #e6dccb; /** Sand: daylight dividers and outlines. */
-  --mf-color-sand-400: #b6a48d; /** Dry grass: secondary text at golden hour. */
+  --mf-color-sand-25: #fffdf8; /** Daylight paper: cards, inputs, tab bar. */
+  --mf-color-sand-50: #fdfbf6; /** Daylight cream: page background. */
+  --mf-color-sand-100: #ece1cf; /** Warm candle-light text (golden hour). */
+  --mf-color-sand-200: #e8e0d2; /** Sand: daylight dividers and outlines. */
+  --mf-color-sand-400: #bcab95; /** Dry grass: secondary text at golden hour. */
   --mf-color-sand-600: #6c5d4f; /** Driftwood: secondary text in daylight. */
-  --mf-color-sand-700: #3f342a; /** Dusk dividers. */
+  --mf-color-sand-700: #483c30; /** Dusk dividers. */
   --mf-color-sand-800: #33291f; /** Espresso ink: body text in daylight. */
-  --mf-color-sand-900: #272019; /** Dusk surface: cards at golden hour. */
-  --mf-color-sand-950: #1d1813; /** Dusk sky: page at golden hour. */
-  --mf-color-sun-100: #f4e5d0; /** Honey wash: tinted backgrounds in daylight. */
+  --mf-color-sand-900: #2f2820; /** Dusk surface: cards at golden hour. */
+  --mf-color-sand-950: #262019; /** Dusk sky: page at golden hour. */
+  --mf-color-sun-100: #f6ead8; /** Honey wash: tinted backgrounds in daylight. */
   --mf-color-sun-400: #e3ae6a; /** Low amber sun: primary colour at golden hour. */
   --mf-color-sun-500: #e0a24a; /** Sun gold: logo and app icon. */
-  --mf-color-sun-900: #3f2f1e; /** Amber shadow: tinted backgrounds at golden hour. */
+  --mf-color-sun-900: #473522; /** Amber shadow: tinted backgrounds at golden hour. */
   --mf-color-ember-600: #9a4b2a; /** Terracotta: primary colour in daylight, app icon background. */
   --mf-color-rose-300: #e992a5; /** Errors at golden hour. */
   --mf-color-rose-700: #9c2c4f; /** Errors in daylight. */
@@ -34,13 +34,11 @@
   --mf-space-10: 40px;
   --mf-space-12: 48px;
   --mf-space-24: 96px;
-  --mf-radius-xs: 6px;
-  --mf-radius-sm: 8px;
-  --mf-radius-md: 12px; /** Buttons, inputs, thumbnails. Softer corners since v1.1. */
-  --mf-radius-lg: 14px;
-  --mf-radius-xl: 20px;
-  --mf-radius-pill: 99px;
-  --mf-radius-circle: 50%;
+  --mf-radius-xs: 2px; /** Focus ring, switch knob, tiny details. */
+  --mf-radius-sm: 3px; /** Badges and labels, the logo in the header. */
+  --mf-radius-md: 4px; /** Buttons, inputs, chips, tabs, switch, thumbnails. */
+  --mf-radius-lg: 6px;
+  --mf-radius-xl: 8px; /** Largest corner: the logo on the login screen. */
   --mf-font-family-mono: 'Inconsolata Variable', 'Inconsolata', ui-monospace, 'SF Mono', Menlo, Consolas, monospace; /** Inconsolata (SIL Open Font License), a variable font with weight (200-900) and width (50-200%) axes. Bundled with the app from the @fontsource-variable/inconsolata package, so it works offline and is not loaded from Google. System monospace fonts are the fallback. */
   --mf-font-size-adjust: 0.5; /** CSS font-size-adjust: scales the font so its lowercase letters are half the font size. Inconsolata's lowercase is only 0.46, so this makes it about 9% larger and as legible as a typical sans-serif at the same font size. Also keeps fallback fonts the same visual size. Change it if the font changes. */
   --mf-font-size-caption: 0.8125rem; /** 13px. Badges, tab labels. */
@@ -114,7 +112,7 @@
   --mf-input-padding-x: var(--mf-space-3);
   --mf-input-padding-y: var(--mf-space-2);
   --mf-chip-min-height: var(--mf-size-control-sm);
-  --mf-chip-radius: var(--mf-radius-pill);
+  --mf-chip-radius: var(--mf-radius-md);
   --mf-article-title-size: var(--mf-font-size-title);
   --mf-article-padding-y: var(--mf-space-5);
   color-scheme: light;

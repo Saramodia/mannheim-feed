@@ -5,23 +5,23 @@
     "sand": {
       "$description": "Warm neutrals, from midday light (0) to dusk (950).",
       "0":   { "$value": "#FFFFFF", "$description": "Pure white. Only for small details such as the switch knob." },
-      "25":  { "$value": "#FFFCF6", "$description": "Daylight paper: cards, inputs, tab bar." },
-      "50":  { "$value": "#FAF5EC", "$description": "Daylight cream: page background." },
-      "100": { "$value": "#E9DDC9", "$description": "Warm candle-light text (golden hour)." },
-      "200": { "$value": "#E6DCCB", "$description": "Sand: daylight dividers and outlines." },
-      "400": { "$value": "#B6A48D", "$description": "Dry grass: secondary text at golden hour." },
+      "25":  { "$value": "#FFFDF8", "$description": "Daylight paper: cards, inputs, tab bar." },
+      "50":  { "$value": "#FDFBF6", "$description": "Daylight cream: page background." },
+      "100": { "$value": "#ECE1CF", "$description": "Warm candle-light text (golden hour)." },
+      "200": { "$value": "#E8E0D2", "$description": "Sand: daylight dividers and outlines." },
+      "400": { "$value": "#BCAB95", "$description": "Dry grass: secondary text at golden hour." },
       "600": { "$value": "#6C5D4F", "$description": "Driftwood: secondary text in daylight." },
-      "700": { "$value": "#3F342A", "$description": "Dusk dividers." },
+      "700": { "$value": "#483C30", "$description": "Dusk dividers." },
       "800": { "$value": "#33291F", "$description": "Espresso ink: body text in daylight." },
-      "900": { "$value": "#272019", "$description": "Dusk surface: cards at golden hour." },
-      "950": { "$value": "#1D1813", "$description": "Dusk sky: page at golden hour." }
+      "900": { "$value": "#2F2820", "$description": "Dusk surface: cards at golden hour." },
+      "950": { "$value": "#262019", "$description": "Dusk sky: page at golden hour." }
     },
     "sun": {
       "$description": "Golden light.",
-      "100": { "$value": "#F4E5D0", "$description": "Honey wash: tinted backgrounds in daylight." },
+      "100": { "$value": "#F6EAD8", "$description": "Honey wash: tinted backgrounds in daylight." },
       "400": { "$value": "#E3AE6A", "$description": "Low amber sun: primary colour at golden hour." },
       "500": { "$value": "#E0A24A", "$description": "Sun gold: logo and app icon." },
-      "900": { "$value": "#3F2F1E", "$description": "Amber shadow: tinted backgrounds at golden hour." }
+      "900": { "$value": "#473522", "$description": "Amber shadow: tinted backgrounds at golden hour." }
     },
     "ember": {
       "$description": "Terracotta: sun on brick and clay.",
